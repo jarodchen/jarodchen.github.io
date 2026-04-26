@@ -1,0 +1,14 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://github.com/jarodchen$"
+    },
+    {
+      "pattern": "^mailto:"
+    }
+  ],
+  "timeout": "10s",
+  "retryOn429": true,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 403]
+}

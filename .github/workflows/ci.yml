@@ -1,0 +1,119 @@
+name: Security and Quality Checks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # 每周运行一次安全检查（周一凌晨）
+    - cron: '0 0 * * 1'
+
+jobs:
+  # 依赖项安全扫描
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v3
+        with:
+          fail-on-severity: moderate
+          comment-summary-in-pr: always
+
+  # 代码质量检查
+  code-quality:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (if needed)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies (if needed)
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          fi
+
+      - name: Check Markdown Links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          config-file: '.github/mlc-config.json'
+          folder-path: '.'
+          file-path: './README.md,./CONTRIBUTING.md,./SECURITY.md'
+
+  # 文档验证
+  docs-validation:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Required Files
+        run: |
+          echo "Checking for required repository files..."
+          required_files=("README.md" "LICENSE" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" "SECURITY.md")
+          missing_files=()
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              missing_files+=("$file")
+              echo "❌ Missing: $file"
+            else
+              echo "✅ Found: $file"
+            fi
+          done
+          
+          if [ ${#missing_files[@]} -ne 0 ]; then
+            echo ""
+            echo "⚠️ Warning: Missing required files: ${missing_files[*]}"
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ All required files are present!"
+
+  # 拼写检查
+  spell-check:
+    name: Spell Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check Spelling
+        uses: codespell-project/actions-codespell@v2
+        with:
+          check_filenames: true
+          skip: "*.lock,*.min.js,node_modules,.git"
+          ignore_words_list: "gitignore,codeofconduct"
+
+  # 许可证兼容性检查
+  license-check:
+    name: License Compatibility Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check License File
+        run: |
+          if [ -f "LICENSE" ]; then
+            echo "✅ LICENSE file exists"
+            head -n 5 LICENSE
+          else
+            echo "❌ LICENSE file not found"
+            exit 1
+          fi

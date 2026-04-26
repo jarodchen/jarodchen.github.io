@@ -1,5 +1,45 @@
 # 知识库
 
+## 📖 EF Core 知识库
+
+Entity Framework Core 系统化学习指南，从基础到企业级实践。
+
+### 🌐 在线访问
+
+**[https://jarodchen.github.io/ef-core-kb/](https://jarodchen.github.io/ef-core-kb/)**
+
+### 📋 知识体系
+
+#### 基础篇
+- EF Core 概述与核心概念
+- 快速入门指南
+- DbContext 详解
+- 开发模式（Code First、Database First）
+
+#### 核心功能
+- 实体关系映射（一对一、一对多、多对多）
+- 查询与数据加载策略
+- LINQ 查询优化
+- 变更跟踪机制
+
+#### 高级主题
+- 迁移与版本控制
+- 性能优化技巧
+- 并发控制
+- 依赖注入与生命周期管理
+
+#### 企业级实践
+- 仓储模式实现
+- 单元测试策略
+- 日志与调试
+- 常见问题解决方案
+
+### 💻 源码
+
+**[GitHub 仓库](https://github.com/jarodchen/ef-core-kb)**
+
+---
+
 ## 📖 幂等性设计知识库
 
 我精心构建的系统化技术知识库，专注于幂等性设计。

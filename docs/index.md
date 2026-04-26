@@ -6,6 +6,11 @@
 
 ### 知识库
 
+#### [EF Core 知识库](https://jarodchen.github.io/ef-core-kb/)
+Entity Framework Core 系统化学习指南，涵盖从基础到企业级实践的完整知识体系。
+
+**技术栈**: EF Core, .NET, SQL Server, PostgreSQL
+
 #### [幂等性设计知识库](https://jarodchen.github.io/Idempotency-kb/)
 系统化、结构化的幂等性设计技术知识库，涵盖理论基础、实现模式、场景化解决方案。
 

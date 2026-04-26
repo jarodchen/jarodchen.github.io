@@ -4,6 +4,20 @@
 
 ## 📚 知识库
 
+### [EF Core 知识库](https://jarodchen.github.io/ef-core-kb/)
+
+Entity Framework Core 系统化学习指南，从基础到企业级实践。
+
+**特点**:
+- 完整的 EF Core 知识体系
+- 关系映射、查询优化、性能调优
+- 迁移管理、并发控制、依赖注入
+- 单元测试与企业级最佳实践
+
+**访问**: [在线查看](https://jarodchen.github.io/ef-core-kb/) | [源码](https://github.com/jarodchen/ef-core-kb)
+
+---
+
 ### [幂等性设计知识库](https://jarodchen.github.io/Idempotency-kb/)
 
 一个系统化、结构化的幂等性设计技术知识库。
@@ -82,6 +96,7 @@
 
 | 项目 | 语言 | Stars | 最后更新 |
 |------|------|-------|---------|
+| ef-core-kb | HTML/CSS/JS | - | 2026-04 |
 | Idempotency-kb | TypeScript | - | 2026-04 |
 | CSharp-LINQ-learn | C# | - | 2026-04 |
 | algo-js | JavaScript | - | 2026-04 |

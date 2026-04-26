@@ -6,8 +6,10 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    # 每周运行一次安全检查（周一凌晨）
     - cron: '0 0 * * 1'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   # 依赖项安全扫描
@@ -36,7 +38,7 @@ jobs:
       - name: Setup Node.js (if needed)
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install Dependencies (if needed)

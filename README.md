@@ -32,8 +32,7 @@
 ## 📋 安全说明
 
 如果您发现任何安全问题，请通过以下方式联系我们：
-- 邮箱：[您的邮箱]
-- 或通过 GitHub Issues 私下报告
+- 通过 GitHub Issues 私下报告
 
 详细信息请参阅 [SECURITY.md](./SECURITY.md)
 

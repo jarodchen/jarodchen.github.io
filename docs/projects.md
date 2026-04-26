@@ -1,36 +1,6 @@
 # 项目导航
 
-这里列出了我的主要项目，涵盖知识库、学习项目和工具开发。
-
-## 📚 知识库
-
-### [EF Core 知识库](https://jarodchen.github.io/ef-core-kb/)
-
-Entity Framework Core 系统化学习指南，从基础到企业级实践。
-
-**特点**:
-- 完整的 EF Core 知识体系
-- 关系映射、查询优化、性能调优
-- 迁移管理、并发控制、依赖注入
-- 单元测试与企业级最佳实践
-
-**访问**: [在线查看](https://jarodchen.github.io/ef-core-kb/) | [源码](https://github.com/jarodchen/ef-core-kb)
-
----
-
-### [幂等性设计知识库](https://jarodchen.github.io/Idempotency-kb/)
-
-一个系统化、结构化的幂等性设计技术知识库。
-
-**特点**:
-- 完整的理论基础讲解
-- 多种实现模式详解
-- 场景化解决方案
-- .NET、PostgreSQL、Redis 等技术栈实践
-
-**访问**: [在线查看](https://jarodchen.github.io/Idempotency-kb/) | [源码](https://github.com/jarodchen/Idempotency-kb)
-
----
+这里列出了我的主要项目，涵盖学习项目和工具开发。
 
 ## 💻 学习项目
 
@@ -92,6 +62,10 @@ Entity Framework Core 系统化学习指南，从基础到企业级实践。
 
 ---
 
+*对所有项目都欢迎提出建议和贡献！*
+
+📚 **知识库项目**请访问 [知识库导航](./knowledge-base)
+
 ## 📊 项目统计
 
 | 项目 | 语言 | Stars | 最后更新 |
@@ -103,5 +77,3 @@ Entity Framework Core 系统化学习指南，从基础到企业级实践。
 | text_to_speech | Python | - | 2026-04 |
 
 ---
-
-*对所有项目都欢迎提出建议和贡献！*

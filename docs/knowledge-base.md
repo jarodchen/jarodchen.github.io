@@ -1,108 +1,22 @@
 # 知识库
 
-## 📖 EF Core 知识库
+系统化、结构化的技术知识库集合。
 
-Entity Framework Core 系统化学习指南，从基础到企业级实践。
+## 📚 知识库列表
 
-### 🌐 在线访问
+### [EF Core 知识库](https://jarodchen.github.io/ef-core-kb/)
 
-**[https://jarodchen.github.io/ef-core-kb/](https://jarodchen.github.io/ef-core-kb/)**
+Entity Framework Core 从基础到企业级实践的完整指南。
 
-### 📋 知识体系
-
-#### 基础篇
-- EF Core 概述与核心概念
-- 快速入门指南
-- DbContext 详解
-- 开发模式（Code First、Database First）
-
-#### 核心功能
-- 实体关系映射（一对一、一对多、多对多）
-- 查询与数据加载策略
-- LINQ 查询优化
-- 变更跟踪机制
-
-#### 高级主题
-- 迁移与版本控制
-- 性能优化技巧
-- 并发控制
-- 依赖注入与生命周期管理
-
-#### 企业级实践
-- 仓储模式实现
-- 单元测试策略
-- 日志与调试
-- 常见问题解决方案
-
-### 💻 源码
-
-**[GitHub 仓库](https://github.com/jarodchen/ef-core-kb)**
+**涵盖**: DbContext、关系映射、查询优化、迁移管理、性能调优、并发控制等。
 
 ---
 
-## 📖 幂等性设计知识库
+### [幂等性设计知识库](https://jarodchen.github.io/Idempotency-kb/)
 
-我精心构建的系统化技术知识库，专注于幂等性设计。
+幂等性设计的系统化技术文档，包含理论基础与实战方案。
 
-### 🌐 在线访问
-
-**[https://jarodchen.github.io/Idempotency-kb/](https://jarodchen.github.io/Idempotency-kb/)**
-
-### 📋 知识体系
-
-#### 基础概念
-- 什么是幂等性
-- HTTP 方法与幂等性
-- 幂等性与安全性
-- 网络超时与重试机制
-- 前端用户误操作防护
-- 消息队列重复消费
-- 分布式系统局部失败
-
-#### 核心实现模式
-- Token 机制（预生成、同步锁）
-- 唯一索引（数据库约束、异常处理）
-- 乐观锁（版本号、状态机流转）
-- 分布式锁（Redis 实现）
-- 全局唯一 ID（请求 ID 去重）
-
-#### 技术栈实现
-- ASP.NET Core 中间件
-- Minimal API 幂等性
-- BackgroundService 幂等性
-- PostgreSQL/MySQL 唯一索引
-- Redis Lua 脚本原子性
-
-#### 场景化解决方案
-- 支付交易：防止重复扣款
-- 支付回调：防止重复处理
-- 订单系统：防止重复下单
-- 用户登录：会话管理
-- 表单提交：用户注册防重
-- 库存扣减：高并发幂等
-
-#### 架构与运维
-- API 网关：请求指纹识别、限流与去重
-- 监控：幂等冲突日志、异常重试告警
-- 测试：并发压力测试
-
-#### 常见问题与陷阱
-- 性能：数据库锁竞争、Redis 网络开销
-- 一致性：Token 删除原子性、分布式事务幂等
-- 边界：Token 过期处理、极端并发穿透
-
-### 🎯 特色
-
-- **系统化**: 从理论到实践的完整知识体系
-- **实战导向**: 每个概念都有实际代码示例
-- **多技术栈**: 涵盖 .NET、PostgreSQL、MySQL、Redis
-- **持续更新**: 定期补充新内容和最佳实践
-
-### 💻 源码
-
-所有文档和示例代码都开源在 GitHub 上：
-
-**[GitHub 仓库](https://github.com/jarodchen/Idempotency-kb)**
+**涵盖**: Token 机制、唯一索引、乐观锁、分布式锁、多技术栈实践等。
 
 ---
 

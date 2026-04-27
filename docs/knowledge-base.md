@@ -12,6 +12,14 @@ Entity Framework Core 从基础到企业级实践的完整指南。
 
 ---
 
+### [数据库锁知识库](https://jarodchen.github.io/database-lock-kb/)
+
+数据库锁机制的系统化技术文档，按多维度分类组织内容。
+
+**涵盖**: 锁粒度、锁模式、锁算法、乐观/悲观锁、特殊锁类型等。
+
+---
+
 ### [幂等性设计知识库](https://jarodchen.github.io/Idempotency-kb/)
 
 幂等性设计的系统化技术文档，包含理论基础与实战方案。

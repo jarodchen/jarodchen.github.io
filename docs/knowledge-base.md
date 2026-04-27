@@ -28,6 +28,14 @@ Entity Framework Core 从基础到企业级实践的完整指南。
 
 ---
 
+### [MediatR 知识库](https://jarodchen.github.io/mediatr-kb/)
+
+MediatR 从基础到源码级别的系统化学习指南。
+
+**涵盖**: CQRS 模式、管道行为、事件驱动、性能优化、源码解析等。
+
+---
+
 ### [幂等性设计知识库](https://jarodchen.github.io/Idempotency-kb/)
 
 幂等性设计的系统化技术文档，包含理论基础与实战方案。

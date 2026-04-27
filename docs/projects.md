@@ -46,6 +46,23 @@
 
 ## 🛠️ 工具项目
 
+### ECharts 在线演示
+
+基于 Vue3 + ECharts 的交互式图表演示平台。
+
+**功能**:
+- 实时编辑 ECharts 配置
+- 支持上下/左右布局切换
+- 拖动调整面板比例
+- Canvas/SVG 渲染器切换
+- 内置 18+ 图表示例
+
+**技术栈**: Vue 3, ECharts, Vite, Monaco Editor
+
+**访问**: [在线演示](https://jarodchen.github.io/echarts-playground/) | [GitHub 仓库](https://github.com/jarodchen/echarts-playground)
+
+---
+
 ### 文本转语音工具
 
 基于 Edge TTS 的文本转语音工具。

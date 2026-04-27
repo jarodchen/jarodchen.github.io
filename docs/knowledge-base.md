@@ -20,6 +20,14 @@ Entity Framework Core 从基础到企业级实践的完整指南。
 
 ---
 
+### [数据库术语知识库](https://jarodchen.github.io/database-term-kb/)
+
+数据库核心术语与技术概念的系统化整理。
+
+**涵盖**: 索引与查询优化、存储结构、事务并发、日志持久化、架构设计等。
+
+---
+
 ### [幂等性设计知识库](https://jarodchen.github.io/Idempotency-kb/)
 
 幂等性设计的系统化技术文档，包含理论基础与实战方案。

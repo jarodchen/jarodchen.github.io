@@ -99,7 +99,7 @@ jobs:
         uses: codespell-project/actions-codespell@v2
         with:
           check_filenames: true
-          skip: "*.lock,*.min.js,node_modules,.git"
+          skip: "*.lock,*.min.js,node_modules,.git,package-lock.json"
           ignore_words_list: "gitignore,codeofconduct"
 
   # 许可证兼容性检查

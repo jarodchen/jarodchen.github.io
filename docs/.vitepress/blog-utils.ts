@@ -21,47 +21,52 @@ try {
   console.error('⚠️  初始化生成页面失败:', error.message);
 }
 
-// 监听 blog 目录变化，自动重新生成（排除自动生成的文件）
-const blogDir = path.resolve(__dirname, '../blog')
+// 仅在开发模式下启动文件监听器（避免阻塞 CI/CD 构建）
+const isDevMode = process.env.NODE_ENV !== 'production' && !process.argv.includes('build')
 
-try {
-  fs.watch(blogDir, { recursive: true }, (eventType, filename) => {
-    if (!filename || !filename.endsWith('.md')) return;
-    
-    // 排除自动生成的文件，避免循环触发
-    const excludedFiles = ['index.md', 'archives.md'];
-    
-    // 检查是否在 categories 目录中（自动生成的）
-    if (filename.includes('categories\\') || filename.includes('categories/')) {
-      return;
-    }
-    
-    // 检查是否是排除的文件（自动生成的）
-    if (excludedFiles.includes(filename)) {
-      return;
-    }
-    
-    console.log(`\n📝 检测到博客文章变化: ${filename}`);
-    
-    // 使用防抖，500ms 后再执行更新，避免频繁触发
-    if (updateTimer) {
-      clearTimeout(updateTimer);
-    }
-    
-    updateTimer = setTimeout(() => {
-      if (!isUpdating) {
-        isUpdating = true;
-        updateBlogIndexPage();
-        updateArchivesPage();
-        updateAllCategoryPages();
-        console.log('✨ 页面已自动更新\n');
-        isUpdating = false;
+if (isDevMode) {
+  // 监听 blog 目录变化，自动重新生成（排除自动生成的文件）
+  const blogDir = path.resolve(__dirname, '../blog')
+
+  try {
+    fs.watch(blogDir, { recursive: true }, (eventType, filename) => {
+      if (!filename || !filename.endsWith('.md')) return;
+      
+      // 排除自动生成的文件，避免循环触发
+      const excludedFiles = ['index.md', 'archives.md'];
+      
+      // 检查是否在 categories 目录中（自动生成的）
+      if (filename.includes('categories\\') || filename.includes('categories/')) {
+        return;
       }
-    }, 500);
-  })
-  console.log('👀 正在监听博客文章变化...（仅监听手动创建的文章文件）\n')
-} catch (error) {
-  console.error('⚠️  文件监听失败:', error.message)
+      
+      // 检查是否是排除的文件（自动生成的）
+      if (excludedFiles.includes(filename)) {
+        return;
+      }
+      
+      console.log(`\n📝 检测到博客文章变化: ${filename}`);
+      
+      // 使用防抖，500ms 后再执行更新，避免频繁触发
+      if (updateTimer) {
+        clearTimeout(updateTimer);
+      }
+      
+      updateTimer = setTimeout(() => {
+        if (!isUpdating) {
+          isUpdating = true;
+          updateBlogIndexPage();
+          updateArchivesPage();
+          updateAllCategoryPages();
+          console.log('✨ 页面已自动更新\n');
+          isUpdating = false;
+        }
+      }, 500);
+    })
+    console.log('👀 正在监听博客文章变化...（仅监听手动创建的文章文件）\n')
+  } catch (error) {
+    console.error('⚠️  文件监听失败:', error.message)
+  }
 }
 
 // 重新导出函数供 config.ts 使用

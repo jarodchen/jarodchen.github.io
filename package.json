@@ -8,11 +8,15 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs"
   },
-  "keywords": ["portfolio", "personal-website"],
+  "keywords": [
+    "portfolio",
+    "personal-website"
+  ],
   "author": "Jarod Chen",
   "license": "MIT",
   "devDependencies": {
     "vitepress": "^1.6.4",
+    "vitepress-plugin-rss": "^0.4.4",
     "vue": "^3.5.0"
   }
 }

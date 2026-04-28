@@ -79,6 +79,11 @@ temp/
 docs/_build/
 site/
 
+## VitePress 自动生成的博客文件
+docs/blog/index.md
+docs/blog/archives.md
+docs/blog/categories/
+
 ## 其他
 *.bak
 *.backup

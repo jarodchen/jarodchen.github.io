@@ -9,7 +9,7 @@ updateArchivesPage()
 // RSS 配置
 const rssOptions = {
   title: "Jarod Chen's Blog",
-  baseUrl: "./",
+  baseUrl: "https://jarodchen.github.io",
   copyright: 'Copyright © 2026 Jarod Chen',
 }
 

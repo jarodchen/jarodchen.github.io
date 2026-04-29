@@ -23,7 +23,8 @@ export default defineConfig({
       { text: '关于我', link: '/about' },
       { text: '项目', link: '/projects' },
       { text: '知识库', link: '/knowledge-base' },
-      { text: '博客', link: '/blog/' }
+      { text: '博客', link: '/blog/' },
+      { text: '工具箱', link: '/tools' }
     ],
     
     sidebar: {
@@ -35,7 +36,8 @@ export default defineConfig({
             { text: '关于我', link: '/about' },
             { text: '项目导航', link: '/projects' },
             { text: '知识库', link: '/knowledge-base' },
-            { text: '博客', link: '/blog/' }
+            { text: '博客', link: '/blog/' },
+            { text: '工具箱', link: '/tools' }
           ]
         }
       ],

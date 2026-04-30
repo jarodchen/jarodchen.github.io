@@ -32,6 +32,13 @@ const tools = [
     desc: '基于 Vue3 + Vite 构建的 AI 聊天应用',
     link: 'https://jarodchen.github.io/ai-chat-hub/',
     tags: ['Vue3', 'AI']
+  },
+  {
+    icon: '🛠️',
+    name: 'Web Tools',
+    desc: '常用在线工具集合，包含编码、转换、计算等实用功能',
+    link: 'https://jarodchen.github.io/web-tools/',
+    tags: ['工具集', '实用']
   }
 ]
 </script>

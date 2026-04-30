@@ -44,42 +44,42 @@ const tools = [
     icon: '🔤',
     name: 'UUID 生成器',
     desc: '生成 UUID v1/v4，支持批量生成和格式转换',
-    link: 'https://jarodchen.github.io/web-tools/#/string/uuid-tools',
+    link: 'https://jarodchen.github.io/web-tools/html/string/uuid-tools/index.html',
     tags: ['工具集', '开发']
   },
   {
     icon: '🔄',
     name: '大小写转换',
     desc: '转换文本为大写、小写、标题格式等',
-    link: 'https://jarodchen.github.io/web-tools/#/transform/case-converter',
+    link: 'https://jarodchen.github.io/web-tools/html/transform/case-converter/index.html',
     tags: ['工具集', '文本']
   },
   {
     icon: '🔐',
     name: '密码生成器',
     desc: '生成高强度随机密码，支持自定义长度和字符类型',
-    link: 'https://jarodchen.github.io/web-tools/#/string/password-generator',
+    link: 'https://jarodchen.github.io/web-tools/html/string/password-generator/index.html',
     tags: ['工具集', '安全']
   },
   {
     icon: '🌐',
     name: '公网 IP 查询',
     desc: '查询当前网络的公网 IP 地址和位置信息',
-    link: 'https://jarodchen.github.io/web-tools/#/network/public-ip',
+    link: 'https://jarodchen.github.io/web-tools/html/network/public-ip/index.html',
     tags: ['工具集', '网络']
   },
   {
     icon: '🔍',
     name: '正则表达式测试',
     desc: '在线测试和验证正则表达式',
-    link: 'https://jarodchen.github.io/web-tools/#/string/regex-tester',
+    link: 'https://jarodchen.github.io/web-tools/html/string/regex-tester/index.html',
     tags: ['工具集', '开发']
   },
   {
     icon: '📊',
     name: '正则可视化',
     desc: '将正则表达式可视化为图形结构',
-    link: 'https://jarodchen.github.io/web-tools/#/string/regex-visualizer',
+    link: 'https://jarodchen.github.io/web-tools/html/string/regex-visualizer/index.html',
     tags: ['工具集', '开发']
   }
 ]

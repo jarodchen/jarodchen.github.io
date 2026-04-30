@@ -59,6 +59,11 @@ ECharts 数据可视化库的系统化学习指南，从基础图表到高级定
 
 **技术栈**: Vue 3, ECharts, Vite, Monaco Editor
 
+#### [ABC 五线谱编辑器](https://jarodchen.github.io/abc-playground/)
+基于 abc.js 的在线五线谱编辑与播放工具，支持实时渲染和 MIDI 播放。
+
+**技术栈**: Vue 3, abc.js, Web Audio API, Vite
+
 #### [文本转语音工具](https://github.com/jarodchen/text_to_speech)
 基于 Edge TTS 的文本转语音工具，支持批量转换和多种语音选项。
 

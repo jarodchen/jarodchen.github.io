@@ -39,6 +39,48 @@ const tools = [
     desc: '常用在线工具集合，包含编码、转换、计算等实用功能',
     link: 'https://jarodchen.github.io/web-tools/',
     tags: ['工具集', '实用']
+  },
+  {
+    icon: '🔤',
+    name: 'UUID 生成器',
+    desc: '生成 UUID v1/v4，支持批量生成和格式转换',
+    link: 'https://jarodchen.github.io/web-tools/#/string/uuid-tools',
+    tags: ['工具集', '开发']
+  },
+  {
+    icon: '🔄',
+    name: '大小写转换',
+    desc: '转换文本为大写、小写、标题格式等',
+    link: 'https://jarodchen.github.io/web-tools/#/transform/case-converter',
+    tags: ['工具集', '文本']
+  },
+  {
+    icon: '🔐',
+    name: '密码生成器',
+    desc: '生成高强度随机密码，支持自定义长度和字符类型',
+    link: 'https://jarodchen.github.io/web-tools/#/string/password-generator',
+    tags: ['工具集', '安全']
+  },
+  {
+    icon: '🌐',
+    name: '公网 IP 查询',
+    desc: '查询当前网络的公网 IP 地址和位置信息',
+    link: 'https://jarodchen.github.io/web-tools/#/network/public-ip',
+    tags: ['工具集', '网络']
+  },
+  {
+    icon: '🔍',
+    name: '正则表达式测试',
+    desc: '在线测试和验证正则表达式',
+    link: 'https://jarodchen.github.io/web-tools/#/string/regex-tester',
+    tags: ['工具集', '开发']
+  },
+  {
+    icon: '📊',
+    name: '正则可视化',
+    desc: '将正则表达式可视化为图形结构',
+    link: 'https://jarodchen.github.io/web-tools/#/string/regex-visualizer',
+    tags: ['工具集', '开发']
   }
 ]
 </script>

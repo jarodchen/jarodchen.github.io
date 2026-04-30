@@ -39,6 +39,19 @@ description: 在线工具和实用程序集合
 
 ## 🔧 开发工具
 
+### AI Chat Hub
+
+基于 Vue3 + Vite 构建的 AI 聊天应用，通过 OpenRouter API 进行对话。
+
+**功能特性：**
+- 🤖 多模型支持与切换
+- ⚙️ 灵活的 API 配置管理
+- 💬 实时流式对话体验
+- 📱 响应式设计，支持移动端
+- 💾 本地存储会话历史
+
+[访问 AI Chat Hub →](https://jarodchen.github.io/ai-chat-hub/)
+
 *更多工具正在添加中...*
 
 ---

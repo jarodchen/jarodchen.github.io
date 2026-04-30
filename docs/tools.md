@@ -1,61 +1,141 @@
 ---
+layout: home
+sidebar: false
+outline: false
 title: 工具箱
 description: 在线工具和实用程序集合
 ---
 
-# 🛠️ 工具箱
+# 工具箱
 
-这里收集了一些实用的在线工具和应用程序，方便日常开发和测试使用。
+这里收集了一些实用的在线工具和应用程序。
 
-## 📊 数据可视化工具
+<script setup>
+const tools = [
+  {
+    icon: '📊',
+    name: 'ECharts Playground',
+    desc: '基于 Vue3 + ECharts 的交互式图表演示平台',
+    link: 'https://jarodchen.github.io/echarts-playground/',
+    tags: ['Vue3', 'ECharts']
+  },
+  {
+    icon: '🎵',
+    name: 'ABC Playground',
+    desc: '基于 abc.js 的在线五线谱编辑和预览工具',
+    link: 'https://jarodchen.github.io/abc-playground/',
+    tags: ['Vue3', 'abc.js']
+  },
+  {
+    icon: '🤖',
+    name: 'AI Chat Hub',
+    desc: '基于 Vue3 + Vite 构建的 AI 聊天应用',
+    link: 'https://jarodchen.github.io/ai-chat-hub/',
+    tags: ['Vue3', 'AI']
+  }
+]
+</script>
 
-### ECharts 在线演示平台
+<div class="tools-grid">
+  <div v-for="tool in tools" :key="tool.name" class="tool-card">
+    <div class="tool-icon">{{ tool.icon }}</div>
+    <h3 class="tool-title">{{ tool.name }}</h3>
+    <p class="tool-desc">{{ tool.desc }}</p>
+    <div class="tool-tags">
+      <span v-for="tag in tool.tags" :key="tag" class="tag">{{ tag }}</span>
+    </div>
+    <a :href="tool.link" class="tool-link" target="_blank">访问工具 →</a>
+  </div>
+</div>
 
-基于 Vue3 + ECharts 的交互式图表演示平台，支持实时编辑和多种图表类型。
+<style scoped>
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 20px 0;
+}
 
-**功能特性：**
-- 📈 丰富的图表类型（折线图、柱状图、饼图等）
-- ✏️ 实时配置编辑与预览
-- 🎨 主题切换与样式定制
-- 💾 导出为图片或代码
-- 📚 内置大量示例配置
+.tool-card {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
 
-[访问 ECharts Playground →](https://jarodchen.github.io/echarts-playground/)
+.tool-card:hover {
+  border-color: var(--vp-c-brand);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
 
-## 📝 音乐工具
+.tool-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
 
-### ABC 五线谱编辑器
+.tool-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--vp-c-text-1);
+}
 
-一个基于 abc.js 的在线五线谱编辑和预览工具，支持实时渲染和播放。
+.tool-desc {
+  color: var(--vp-c-text-2);
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+  font-size: 13px;
+  flex-grow: 1;
+}
 
-**功能特性：**
-- 🎵 实时 ABC 记谱法转五线谱
-- 🎹 MIDI 音频播放
-- 📐 缩放和平移控制
-- 💾 导出为 SVG/PNG/MIDI
-- 📚 内置示例曲谱
+.tool-tags {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
 
-[访问 ABC Playground →](https://jarodchen.github.io/abc-playground/)
+.tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand);
+  border-radius: 3px;
+}
 
-## 🔧 开发工具
+.tool-link {
+  display: inline-block;
+  padding: 6px 14px;
+  background: var(--vp-c-brand);
+  color: #fff !important;
+  text-decoration: none !important;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
 
-### AI Chat Hub
+.tool-link:hover {
+  background: var(--vp-c-brand-dark);
+  transform: translateX(4px);
+}
 
-基于 Vue3 + Vite 构建的 AI 聊天应用，通过 OpenRouter API 进行对话。
-
-**功能特性：**
-- 🤖 多模型支持与切换
-- ⚙️ 灵活的 API 配置管理
-- 💬 实时流式对话体验
-- 📱 响应式设计，支持移动端
-- 💾 本地存储会话历史
-
-[访问 AI Chat Hub →](https://jarodchen.github.io/ai-chat-hub/)
-
-*更多工具正在添加中...*
+@media (max-width: 768px) {
+  .tools-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+}
+</style>
 
 ---
 
-## 💡 贡献
+## 贡献
 
 如果你有好的工具想法或建议，欢迎在 [GitHub](https://github.com/jarodchen/jarodchen.github.io) 上提出 Issue 或 Pull Request。

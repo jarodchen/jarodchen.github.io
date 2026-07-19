@@ -25,7 +25,7 @@ export default defineConfig({
       { text: '知识库', link: '/knowledge-base' },
       { text: '博客', link: '/blog/' },
       { text: '工具箱', link: '/tools' },
-      { text: '站点', link: '/jarod-site/' }
+      { text: '站点', link: '/jarod-site' }
     ],
     
     sidebar: {

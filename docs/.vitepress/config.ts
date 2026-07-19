@@ -24,7 +24,8 @@ export default defineConfig({
       { text: '项目', link: '/projects' },
       { text: '知识库', link: '/knowledge-base' },
       { text: '博客', link: '/blog/' },
-      { text: '工具箱', link: '/tools' }
+      { text: '工具箱', link: '/tools' },
+      { text: '站点', link: '/jarod-site/' }
     ],
     
     sidebar: {
@@ -37,7 +38,8 @@ export default defineConfig({
             { text: '项目导航', link: '/projects' },
             { text: '知识库', link: '/knowledge-base' },
             { text: '博客', link: '/blog/' },
-            { text: '工具箱', link: '/tools' }
+            { text: '工具箱', link: '/tools' },
+            { text: '站点', link: '/jarod-site/' }
           ]
         }
       ],

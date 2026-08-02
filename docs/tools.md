@@ -1,14 +1,10 @@
 ---
-layout: home
-sidebar: false
+layout: page
+sidebar: true
 outline: false
 title: 工具箱
 description: 在线工具和实用程序集合
 ---
-
-# 工具箱
-
-这里收集了一些实用的在线工具和应用程序。
 
 <script setup>
 const tools = [
@@ -105,11 +101,13 @@ const tools = [
 </div>
 
 <style scoped>
+
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 16px;
   padding: 20px 0;
+  margin: 20px 40px;
 }
 
 .tool-card {
@@ -189,9 +187,3 @@ const tools = [
   }
 }
 </style>
-
----
-
-## 贡献
-
-如果你有好的工具想法或建议，欢迎在 [GitHub](https://github.com/jarodchen/jarodchen.github.io) 上提出 Issue 或 Pull Request。

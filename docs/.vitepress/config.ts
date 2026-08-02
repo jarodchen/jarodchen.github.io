@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 import { generateBlogSidebar, updateArchivesPage, updateBlogIndexPage } from './blog-utils'
 import { RssPlugin } from 'vitepress-plugin-rss'
 
@@ -13,19 +14,24 @@ const rssOptions = {
   copyright: 'Copyright © 2026 Jarod Chen',
 }
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   title: "Jarod Chen's GitHub Pages",
   description: '技术学习历程、项目实践和知识分享',
+
+  // Mermaid 图表配置（流程图、时序图、类图等）
+  mermaid: {
+    // 默认主题，可针对暗色模式在客户端进一步调整
+    theme: 'default',
+  },
   
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
-      { text: '关于我', link: '/about' },
       { text: '项目', link: '/projects' },
       { text: '知识库', link: '/knowledge-base' },
-      { text: '博客', link: '/blog/' },
       { text: '工具箱', link: '/tools' },
-      { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' }
+      { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
+      { text: '关于我', link: '/about' },
     ],
     
     sidebar: {
@@ -34,12 +40,12 @@ export default defineConfig({
           text: '概览',
           items: [
             { text: '首页', link: '/' },
-            { text: '关于我', link: '/about' },
             { text: '项目导航', link: '/projects' },
             { text: '知识库', link: '/knowledge-base' },
-            { text: '博客', link: '/blog/' },
+            // { text: '博客', link: '/blog/' },
             { text: '工具箱', link: '/tools' },
-            { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' }
+            { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
+            { text: '关于我', link: '/about' }
           ]
         }
       ],
@@ -68,6 +74,9 @@ export default defineConfig({
       }
     },
     
+    // 将右侧的文章目录（页面导航）挪到左侧
+    aside: 'right',
+
     outline: {
       level: [2, 3],
       label: '页面导航'
@@ -94,6 +103,6 @@ export default defineConfig({
   vite: {
     plugins: [RssPlugin(rssOptions)]
   }
-})
+}))
 
 // Auto-update: 2026-04-28T13:57:02.459Z

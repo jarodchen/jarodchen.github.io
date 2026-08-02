@@ -21,6 +21,7 @@ interface BlogPostMetadata {
   tags: string[]
   category: string | null
   description: string | null
+  banner: string | null
 }
 
 /**
@@ -28,70 +29,71 @@ interface BlogPostMetadata {
  * 扫描 blog 目录下的所有文章，按年份组织
  */
 export function generateBlogSidebar(): SidebarItem[] {
-  const blogDir = path.resolve(__dirname, '../blog')
   const sidebarItems: SidebarItem[] = []
+
 
   // 添加博客首页和归档页
   sidebarItems.push({
-    text: '博客',
+    // text: '博客',
     items: [
       { text: '首页', link: '/blog/' },
-      { text: '文章归档', link: '/blog/archives' },
+      // { text: '文章归档', link: '/blog/archives' },
       { text: '分类索引', link: '/blog/categories/' },
-      { text: 'RSS 订阅', link: '/blog/rss' }
+      { text: '标签索引', link: '/blog/tags/' },
+      // { text: 'RSS 订阅', link: '/blog/rss' }
     ]
   })
 
-  // 扫描年份目录
-  if (fs.existsSync(blogDir)) {
-    const yearDirs = fs.readdirSync(blogDir)
-      .filter(dir => /^\d{4}$/.test(dir)) // 匹配年份格式（如 2026）
-      .sort((a, b) => parseInt(b) - parseInt(a)) // 按年份降序排列
 
-    yearDirs.forEach(year => {
-      const yearPath = path.join(blogDir, year)
-      
-      if (fs.statSync(yearPath).isDirectory()) {
-        const articles = []
-        
-        // 扫描该年份下的所有 Markdown 文件
-        const files = fs.readdirSync(yearPath)
-          .filter(file => file.endsWith('.md'))
-          .sort((a, b) => {
-            // 尝试从文件名或 frontmatter 中提取日期进行排序
-            const statA = fs.statSync(path.join(yearPath, a))
-            const statB = fs.statSync(path.join(yearPath, b))
-            return statB.mtime.getTime() - statA.mtime.getTime() // 按修改时间降序
-          })
+  // 获取所有文章并按分类分组
+  const posts = getBlogPostsMetadata()
+  const postsByCategory: Record<string, typeof posts> = {}
+  posts.forEach(post => {
+    const category = post.category || '未分类'
+    if (!postsByCategory[category]) {
+      postsByCategory[category] = []
+    }
+    postsByCategory[category].push(post)
+  })
 
-        const articleItems: SidebarItem[] = []
+  // 分类排序：文章多的在前，未分类放最后
+  const categories = Object.keys(postsByCategory).sort((a, b) => {
+    if (a === '未分类') return 1
+    if (b === '未分类') return -1
+    return postsByCategory[b].length - postsByCategory[a].length
+  })
 
-        files.forEach(file => {
-          const filePath = path.join(yearPath, file)
-          const content = fs.readFileSync(filePath, 'utf-8')
-          
-          // 提取 title（从 frontmatter 或文件名）
-          let title = extractTitle(content, file)
-          
-          // 转换为 VitePress 链接格式
-          const link = `/blog/${year}/${file.replace('.md', '')}`
-          
-          articleItems.push({
-            text: title,
-            link: link
-          })
-        })
-
-        if (articleItems.length > 0) {
-          sidebarItems.push({
-            text: `${year} 年`,
-            collapsed: false, // 默认展开当年文章
-            items: articleItems
-          })
-        }
-      }
+  // 分类改为简单链接，点击跳转到分类索引页（避免侧边栏下拉过长）
+  categories.forEach(category => {
+    const categoryPosts = postsByCategory[category]
+    const categoryLink = `/blog/categories/${category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
+    sidebarItems.push({
+      text: `${category}（${categoryPosts.length}）`,
+      link: categoryLink
     })
-  }
+  })
+
+  // 按年份分组（默认折叠，便于按时间浏览）
+  const postsByYear: Record<string, typeof posts> = {}
+  posts.forEach(post => {
+    if (!postsByYear[post.year]) {
+      postsByYear[post.year] = []
+    }
+    postsByYear[post.year].push(post)
+  })
+
+  Object.keys(postsByYear)
+    .sort((a, b) => parseInt(b) - parseInt(a)) // 年份降序
+    .forEach(year => {
+      sidebarItems.push({
+        text: `${year} 年`,
+        collapsed: true, // 年份默认折叠
+        items: postsByYear[year].map(post => ({
+          text: post.title,
+          link: post.link
+        }))
+      })
+    })
 
   return sidebarItems
 }
@@ -141,7 +143,8 @@ export function getBlogPostsMetadata(): BlogPostMetadata[] {
             date: extractDate(content),
             tags: extractTags(content),
             category: extractCategory(content),
-            description: extractDescription(content)
+            description: extractDescription(content),
+            banner: extractBanner(content)
           }
           
           posts.push(metadata)
@@ -190,4 +193,28 @@ function extractCategory(content) {
 function extractDescription(content) {
   const match = content.match(/^---[\s\S]*?description:\s*(.+?)\s*$/m)
   return match ? match[1].replace(/['"]/g, '').trim() : null
+}
+
+/**
+ * 从 frontmatter 中提取横幅图片
+ */
+function extractBanner(content) {
+  const match = content.match(/^---[\s\S]*?banner:\s*(.+?)\s*$/m)
+  return match ? match[1].replace(/['"]/g, '').trim() : null
+}
+
+/**
+ * 获取所有标签及其文章数
+ */
+export function getAllTags(): Record<string, number> {
+  const posts = getBlogPostsMetadata()
+  const tags: Record<string, number> = {}
+
+  posts.forEach(post => {
+    post.tags.forEach(tag => {
+      tags[tag] = (tags[tag] || 0) + 1
+    })
+  })
+
+  return tags
 }

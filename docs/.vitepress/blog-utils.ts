@@ -1,6 +1,7 @@
 // VitePress 配置扩展 - 自动更新博客侧边栏和归档页
 import { generateBlogSidebar, getBlogPostsMetadata } from './sidebar-generator'
 import { updateAllCategoryPages } from './category-generator'
+import { updateAllTagPages } from './tag-generator'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -12,11 +13,12 @@ const __dirname = path.dirname(__filename)
 let updateTimer: NodeJS.Timeout | null = null;
 let isUpdating = false;
 
-// 启动时自动生成博客首页、归档页面和分类页面（仅执行一次）
+// 启动时自动生成博客首页、归档页面、分类页面和标签页面（仅执行一次）
 try {
   updateBlogIndexPage();
   updateArchivesPage();
   updateAllCategoryPages();
+  updateAllTagPages();
 } catch (error) {
   console.error('⚠️  初始化生成页面失败:', error.message);
 }
@@ -35,8 +37,11 @@ if (isDevMode) {
       // 排除自动生成的文件，避免循环触发
       const excludedFiles = ['index.md', 'archives.md'];
       
-      // 检查是否在 categories 目录中（自动生成的）
-      if (filename.includes('categories\\') || filename.includes('categories/')) {
+      // 检查是否在自动生成目录中（categories / tags）
+      if (
+        filename.includes('categories\\') || filename.includes('categories/') ||
+        filename.includes('tags\\') || filename.includes('tags/')
+      ) {
         return;
       }
       
@@ -58,6 +63,7 @@ if (isDevMode) {
           updateBlogIndexPage();
           updateArchivesPage();
           updateAllCategoryPages();
+          updateAllTagPages();
           console.log('✨ 页面已自动更新\n');
           isUpdating = false;
         }
@@ -74,6 +80,7 @@ export { generateBlogSidebar }
 
 /**
  * 生成博客首页内容
+ * 同时更新网站首页（docs/index.md）与博客首页（docs/blog/index.md）
  */
 export function updateBlogIndexPage() {
   try {
@@ -223,10 +230,21 @@ features:
 -->
 `
 
-    const outputPath = path.resolve(__dirname, '../blog/index.md')
-    fs.writeFileSync(outputPath, content, 'utf-8')
+    // 博客首页（docs/blog/index.md）：保留博客侧边栏
+    const blogOutputPath = path.resolve(__dirname, '../blog/index.md')
+    fs.writeFileSync(blogOutputPath, content, 'utf-8')
+
+    // 网站首页（docs/index.md）：禁用侧边栏，锚点与站内链接改为指向首页自身
+    const homeContent = content
+      .replace('link: /blog/#recent', 'link: /#recent')
+      .replace('link: /blog/#categories', 'link: /#categories')
+      .replace('title: 博客\ndescription: 技术分享与学习心得\nhero:', 'title: 博客\ndescription: 技术分享与学习心得\nsidebar: false\nhero:')
+      .replaceAll('./archives.md', '/blog/archives')
+
+    const homeOutputPath = path.resolve(__dirname, '../index.md')
+    fs.writeFileSync(homeOutputPath, homeContent, 'utf-8')
     
-    console.log(`✅ 博客首页已自动更新 (${posts.length} 篇文章)`)
+    console.log(`✅ 网站首页与博客首页已自动更新 (${posts.length} 篇文章)`)
   } catch (error) {
     console.error('❌ 更新博客首页失败:', error.message)
   }

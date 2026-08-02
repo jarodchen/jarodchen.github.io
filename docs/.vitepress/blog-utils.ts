@@ -108,27 +108,11 @@ layout: home
 title: 博客
 description: 技术分享与学习心得
 hero:
-  name: 技术博客
-  text: 记录学习历程，分享技术心得
-  tagline: 专注于 .NET、前端开发、算法与数据结构
-  actions:
-    - theme: brand
-      text: 浏览文章
-      link: /blog/#recent
-    - theme: alt
-      text: 查看分类
-      link: /blog/#categories
-features:
-  - icon: 📝
-    title: 技术分享
-    details: 分享在 .NET、前端、数据库等领域的实践经验
-  - icon: 💡
-    title: 学习心得
-    details: 记录学习新技术的历程和心得体会
-  - icon: 🔍
-    title: 深度解析
-    details: 深入分析技术原理和最佳实践
+  name: 白日梦想家
+  tagline: 仰望星空，低头滚粪，不掩饰无能，不停止嘲笑
 ---
+
+
 
 # 最新文章 {#recent}
 
@@ -156,9 +140,12 @@ features:
 
     content += `---
 
+
+
+---
 # 文章分类 {#categories}
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 30px 0;">
+<div class="cat-grid">
 
 `
 
@@ -184,26 +171,24 @@ features:
       const categoryPosts = postsByCategory[category]
       const categoryLink = `/blog/categories/${category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
       
-      content += `<div style="border: 1px solid var(--vp-c-divider); border-radius: 8px; padding: 16px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='var(--vp-c-brand)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)'" onmouseout="this.style.borderColor='var(--vp-c-divider)'; this.style.boxShadow='none'">
-  <h4 style="margin: 0 0 12px 0; font-size: 1em; display: flex; justify-content: space-between; align-items: center;">
-    <a href="${categoryLink}" style="text-decoration: none; color: inherit;">
-      ${icon} ${category}
-    </a>
-    <span style="font-size: 0.8em; color: var(--vp-c-text-3); font-weight: normal;">${categoryPosts.length} 篇</span>
+      content += `<div class="cat-card">
+  <h4 class="cat-card-head">
+    <a href="${categoryLink}" class="cat-card-title">${icon} ${category}</a>
+    <span class="cat-card-count">${categoryPosts.length} 篇</span>
   </h4>
-  <ul style="margin: 0; padding-left: 18px; font-size: 0.9em; line-height: 1.8;">
+  <ul class="cat-card-list">
 `
-      
+
       // 显示最新的 3 篇文章
       const recentPosts = categoryPosts.slice(0, 3)
       recentPosts.forEach(post => {
-        content += `    <li><a href="${post.link}" style="color: var(--vp-c-text-1); text-decoration: none;">${post.title}</a></li>\n`
+        content += `    <li><a href="${post.link}">${post.title}</a></li>\n`
       })
-      
+
       if (categoryPosts.length > 3) {
-        content += `    <li><a href="${categoryLink}" style="color: var(--vp-c-brand); text-decoration: none;">... 查看更多 (${categoryPosts.length - 3} 篇)</a></li>\n`
+        content += `    <li><a href="${categoryLink}" class="cat-card-more">... 查看更多 (${categoryPosts.length - 3} 篇)</a></li>\n`
       }
-      
+
       content += `  </ul>
 </div>
 
@@ -212,8 +197,8 @@ features:
 
     content += `</div>
 
-<p style="text-align: center; color: var(--vp-c-text-2); font-size: 0.9em;">
-  👆 点击分类查看该领域的所有文章 | 
+<p class="cat-foot">
+  👆 点击分类查看该领域的所有文章 |
   <a href="/blog/categories/">查看完整分类索引</a>
 </p>
 

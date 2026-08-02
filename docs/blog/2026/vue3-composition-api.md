@@ -4,7 +4,7 @@ date: 2026-04-15
 tags: [Vue 3, JavaScript, Composition API, Frontend]
 category: 前端开发
 description: 深入理解 Vue 3 Composition API，掌握现代 Vue 开发模式
-banner: /images/vue3.png
+banner: /images/vue3.webp
 ---
 
 # Vue 3 组合式 API 实战指南

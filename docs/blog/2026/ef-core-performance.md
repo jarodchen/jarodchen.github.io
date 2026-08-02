@@ -4,7 +4,7 @@ date: 2026-04-20
 tags: [EF Core, .NET, Performance, Database]
 category: .NET 开发
 description: 掌握 EF Core 性能优化的关键技巧，提升数据库访问效率
-banner: /images/ef-core.png
+banner: /images/ef-core.webp
 ---
 
 # EF Core 性能优化技巧

@@ -20,5 +20,8 @@
     "vitepress-plugin-mermaid": "^2.0.17",
     "vitepress-plugin-rss": "^0.4.4",
     "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "vitepress-plugin-mermaid-pan-zoom": "^1.0.2"
   }
 }

@@ -1,8 +1,8 @@
 ---
 title: EF Core 性能优化技巧
 date: 2026-04-20
-tags: [EF Core, .NET, Performance, Database]
-category: .NET 开发
+tags: [EF Core, .NET Core, Performance, Database]
+category: .NET Core
 description: 掌握 EF Core 性能优化的关键技巧，提升数据库访问效率
 banner: /images/ef-core.webp
 ---

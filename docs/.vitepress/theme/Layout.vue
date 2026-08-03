@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 
 const { Layout } = DefaultTheme
 const { frontmatter } = useData()
@@ -14,6 +14,12 @@ const isPost = computed(
 function tagLink(tag: string) {
   return `/blog/tags/${tag.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
 }
+
+// Mermaid 平移缩放：该插件依赖 svg-pan-zoom（模块顶层引用 window / MutationObserver），
+// 无法在 SSR 阶段执行，故通过 <ClientOnly> + 异步组件只在浏览器端加载。
+const MermaidEnhancer = defineAsyncComponent(
+  () => import('./components/MermaidEnhancer.vue')
+)
 </script>
 
 <template>
@@ -41,6 +47,10 @@ function tagLink(tag: string) {
       </div>
     </template>
   </DefaultTheme.Layout>
+
+  <ClientOnly>
+    <MermaidEnhancer />
+  </ClientOnly>
 </template>
 
 <style scoped>

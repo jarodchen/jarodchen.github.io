@@ -13,7 +13,22 @@ const practiceProjects = [
     name: 'my-site',
     desc: '一套仿ruoyi的基于 Vue 3 + Vite 开箱即用的管理后台骨架。一开始重写ruoyi用来学习的, 越做越接近已经可用',
     tags: ['Vue 3', 'Vite', 'Element Plus', 'VueUse', 'ECharts', 'Pinia'],
-    links: {text: '预览', href: 'https://jarodchen.github.io/jarod-site/'}
+    links: [{
+      text: 'GitHub 仓库', href: 'https://github.com/jarodchen/jarod-site/', 
+    },{
+      text: '预览', href: 'https://jarodchen.github.io/jarod-site/'
+    }]
+  },
+  {
+    icon: '📊',
+    name: 'ECharts 性能优化对比实验室',
+    desc: '一个用于直观对比 ECharts 图表在 未优化 与 应用多种优化策略 后性能差异的交互式演示平台。 左右并排两个图表，使用完全相同的原始数据，通过实时性能指标（渲染耗时 / FPS / 内存）量化对比优化效果。',
+    tags: ['ECharts', '性能优化'],
+    links: [{
+      text: 'GitHub 仓库', href: 'https://github.com/jarodchen/echarts-performance-lab/', 
+    },{
+      text: '预览', href: 'https://jarodchen.github.io/echarts-performance-lab/'   
+    }]
   }
 ]
 

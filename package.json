@@ -15,6 +15,7 @@
   "author": "Jarod Chen",
   "license": "MIT",
   "devDependencies": {
+    "@nolebase/markdown-it-bi-directional-links": "^2.18.2",
     "mermaid": "^11.16.0",
     "vitepress": "^1.6.4",
     "vitepress-plugin-mermaid": "^2.0.17",

@@ -83,6 +83,7 @@ site/
 docs/blog/index.md
 docs/blog/archives.md
 docs/blog/categories/
+docs/blog/tags/
 
 ## 其他
 *.bak

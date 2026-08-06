@@ -2,6 +2,7 @@
 import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
 import { computed, defineAsyncComponent } from 'vue'
+import BackToTop from './components/BackToTop.vue'
 
 const { Layout } = DefaultTheme
 const { frontmatter } = useData()
@@ -51,6 +52,8 @@ const MermaidEnhancer = defineAsyncComponent(
   <ClientOnly>
     <MermaidEnhancer />
   </ClientOnly>
+
+  <BackToTop />
 </template>
 
 <style scoped>

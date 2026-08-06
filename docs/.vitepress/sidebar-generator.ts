@@ -87,7 +87,7 @@ export function generateBlogSidebar(): SidebarItem[] {
   if (categoryItems.length) {
     sidebarItems.push({
       text: '分类',
-      collapsed: true,
+      collapsed: false,
       items: categoryItems
     })
   }
@@ -106,7 +106,7 @@ export function generateBlogSidebar(): SidebarItem[] {
     .forEach(year => {
       sidebarItems.push({
         text: `${year} 年`,
-        collapsed: true, // 年份默认折叠
+        collapsed: false, // 年份默认展开
         items: postsByYear[year].map(post => ({
           text: post.title,
           link: post.link

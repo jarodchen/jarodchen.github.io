@@ -29,9 +29,11 @@ export default withMermaid(defineConfig({
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
+      { text: '博客', link: '/blog/categories' },
       { text: '项目', link: '/projects' },
       { text: '知识库', link: '/knowledge-base' },
       { text: '工具箱', link: '/tools' },
+      { text: 'flog', link: 'https://jarodchen.github.io/flog/', target: '_blank' },
       { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
       { text: '关于我', link: '/about' },
     ],
@@ -42,9 +44,10 @@ export default withMermaid(defineConfig({
           text: '概览',
           items: [
             { text: '首页', link: '/' },
+            { text: '博客', link: '/blog/categories' },
             { text: '项目导航', link: '/projects' },
             { text: '知识库', link: '/knowledge-base' },
-            // { text: '博客', link: '/blog/' },
+            { text: 'flog', link: 'https://jarodchen.github.io/flog/', target: '_blank' },
             { text: '工具箱', link: '/tools' },
             { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
             { text: '关于我', link: '/about' }

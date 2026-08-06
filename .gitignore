@@ -89,3 +89,4 @@ docs/blog/tags/
 *.bak
 *.backup
 *~
+.temp/

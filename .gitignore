@@ -90,3 +90,4 @@ docs/blog/tags/
 *.backup
 *~
 .temp/
+docs/index.md

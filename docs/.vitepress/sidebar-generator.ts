@@ -22,6 +22,7 @@ interface BlogPostMetadata {
   category: string | null
   description: string | null
   banner: string | null
+  categories: string[]
 }
 
 /**
@@ -45,15 +46,29 @@ export function generateBlogSidebar(): SidebarItem[] {
   })
 
 
-  // 获取所有文章并按分类分组
+  // 获取所有文章并按分类分组（合并单值 category 与数组 categories）
   const posts = getBlogPostsMetadata()
   const postsByCategory: Record<string, typeof posts> = {}
   posts.forEach(post => {
-    const category = post.category || '未分类'
-    if (!postsByCategory[category]) {
-      postsByCategory[category] = []
+    // 合并 category（单值）与 categories（数组），去重后作为该文章所属的全部分类
+    const postCategories = new Set<string>()
+    if (post.category) {
+      postCategories.add(post.category)
     }
-    postsByCategory[category].push(post)
+    if (Array.isArray(post.categories)) {
+      post.categories.forEach(c => postCategories.add(c))
+    }
+    // 都没有则归入「未分类」
+    if (postCategories.size === 0) {
+      postCategories.add('未分类')
+    }
+
+    postCategories.forEach(category => {
+      if (!postsByCategory[category]) {
+        postsByCategory[category] = []
+      }
+      postsByCategory[category].push(post)
+    })
   })
 
   // 分类排序：文章多的在前，未分类放最后
@@ -143,6 +158,7 @@ export function getBlogPostsMetadata(): BlogPostMetadata[] {
             date: extractDate(content),
             tags: extractTags(content),
             category: extractCategory(content),
+            categories: extractCategories(content),
             description: extractDescription(content),
             banner: extractBanner(content)
           }
@@ -169,13 +185,29 @@ function extractDate(content) {
 }
 
 /**
- * 从 frontmatter 中提取标签
+ * 从 frontmatter 中提取标签（数组）
+ * 支持行内写法 tags: [a, b, c] 与块级列表写法：
+ *   tags:
+ *     - a
+ *     - b
  */
 function extractTags(content) {
-  const match = content.match(/^---[\s\S]*?tags:\s*\[(.*?)\]\s*$/m)
-  if (match && match[1]) {
-    return match[1].split(',').map(tag => tag.trim().replace(/['"]/g, ''))
+  const inline = content.match(/^---[\s\S]*?tags:\s*\[(.*?)\]\s*$/m)
+  if (inline) {
+    return inline[1]
+      .split(',')
+      .map(tag => tag.trim().replace(/['"]/g, ''))
+      .filter(Boolean)
   }
+
+  const blockMatch = content.match(/^---[\s\S]*?tags:\s*\n((?:\s*-\s*.+\s*\n?)+)/m)
+  if (blockMatch) {
+    return blockMatch[1]
+      .split('\n')
+      .map(line => line.match(/^\s*-\s*(.+?)\s*$/)?.[1]?.replace(/['"]/g, '').trim())
+      .filter(Boolean)
+  }
+
   return []
 }
 
@@ -185,6 +217,33 @@ function extractTags(content) {
 function extractCategory(content) {
   const match = content.match(/^---[\s\S]*?category:\s*(.+?)\s*$/m)
   return match ? match[1].replace(/['"]/g, '').trim() : null
+}
+
+/**
+ * 从 frontmatter 中提取多值分类（数组）
+ * 支持行内写法 categories: [a, b, c] 与块级列表写法：
+ *   categories:
+ *     - a
+ *     - b
+ */
+function extractCategories(content) {
+  const inline = content.match(/^---[\s\S]*?categories:\s*\[(.*?)\]\s*$/m)
+  if (inline) {
+    return inline[1]
+      .split(',')
+      .map(c => c.trim().replace(/['"]/g, ''))
+      .filter(Boolean)
+  }
+
+  const blockMatch = content.match(/^---[\s\S]*?categories:\s*\n((?:\s*-\s*.+\s*\n?)+)/m)
+  if (blockMatch) {
+    return blockMatch[1]
+      .split('\n')
+      .map(line => line.match(/^\s*-\s*(.+?)\s*$/)?.[1]?.replace(/['"]/g, '').trim())
+      .filter(Boolean)
+  }
+
+  return []
 }
 
 /**

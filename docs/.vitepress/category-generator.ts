@@ -14,11 +14,25 @@ export function getCategories() {
   const categories: Record<string, typeof posts> = {}
 
   posts.forEach(post => {
-    const category = post.category || '未分类'
-    if (!categories[category]) {
-      categories[category] = []
+    // 合并单值 category 与数组 categories，去重后作为该文章所属的全部分类
+    const postCategories = new Set<string>()
+    if (post.category) {
+      postCategories.add(post.category)
     }
-    categories[category].push(post)
+    if (Array.isArray(post.categories)) {
+      post.categories.forEach(c => postCategories.add(c))
+    }
+    // 都没有则归入「未分类」
+    if (postCategories.size === 0) {
+      postCategories.add('未分类')
+    }
+
+    postCategories.forEach(category => {
+      if (!categories[category]) {
+        categories[category] = []
+      }
+      categories[category].push(post)
+    })
   })
 
   return categories
@@ -109,15 +123,15 @@ description: 按分类浏览技术文章
 `
 
     const outputPath = path.resolve(__dirname, '../blog/categories/index.md')
-    
+
     // 确保目录存在
     const outputDir = path.dirname(outputPath)
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true })
     }
-    
+
     fs.writeFileSync(outputPath, content, 'utf-8')
-    
+
     console.log(`✅ 分类索引页已自动更新 (${categoryNames.length} 个分类)`)
   } catch (error) {
     console.error('❌ 更新分类索引页失败:', error.message)
@@ -344,15 +358,15 @@ const posts = ${postsJson}
 
     const filename = category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-') + '.md'
     const outputPath = path.resolve(__dirname, `../blog/categories/${filename}`)
-    
+
     // 确保目录存在
     const outputDir = path.dirname(outputPath)
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true })
     }
-    
+
     fs.writeFileSync(outputPath, content, 'utf-8')
-    
+
     console.log(`✅ 分类页面已生成: ${category} (${posts.length} 篇文章)`)
   } catch (error) {
     console.error(`❌ 生成分类页面失败 (${category}):`, error.message)
@@ -368,7 +382,7 @@ export function updateAllCategoryPages() {
     const categoryNames = Object.keys(categories)
 
     console.log(`\n📂 开始生成分类页面...`)
-    
+
     // 生成分类索引页
     updateCategoriesIndexPage()
 

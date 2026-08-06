@@ -200,3 +200,36 @@ const MermaidEnhancer = defineAsyncComponent(
   font-size: 13px;
 }
 </style>
+
+<!-- 全站滚动细化：细滚动条 + 平滑滚动 -->
+<style>
+html {
+  scroll-behavior: smooth;
+}
+
+/* Firefox 细滚动条 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--vp-c-divider) transparent;
+}
+
+/* WebKit（Chrome / Edge / Safari）细滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--vp-c-divider);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--vp-c-text-3);
+}
+</style>

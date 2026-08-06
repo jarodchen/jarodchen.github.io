@@ -3,7 +3,7 @@ tags: [".NET Core"]
 related: []
 category: .NET Core
 aliases:
-date: 2026-08-03
+date: 2025-08-03
 title: .NET Core 对象映射库选型指南
 banner: /images/banner-csharp.webp
 description: .NET Core 开发中，对象映射库技术选型

@@ -1,6 +1,6 @@
 ---
 title: DDIA 核心思想串讲——全书知识体系一张图
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "知识体系", "分布式系统", "系统设计", "架构"]
 category: 读书笔记
 banner: /images/architect1.webp

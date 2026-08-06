@@ -1,6 +1,6 @@
 ---
 title: 数据系统的未来——Flink、Snowflake 与 AI 时代的挑战
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "数据系统", "AI原生", "Flink", "Snowflake", "云原生", "数据治理"]
 category: 读书笔记
 banner: /images/architect1.webp

@@ -1,6 +1,6 @@
 ---
 title: 事务简史——从 ACID 到分布式事务
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "事务", "ACID", "隔离级别", "分布式事务", "2PC"]
 category: 读书笔记
 banner: /images/architect1.webp

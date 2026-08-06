@@ -1,6 +1,6 @@
 ---
 title: 数据分区——如何将海量数据拆分到多台机器？
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "数据分区", "分片", "范围分区", "哈希分区", "一致性哈希", "分布式系统"]
 category: 读书笔记
 banner: /images/architect1.webp

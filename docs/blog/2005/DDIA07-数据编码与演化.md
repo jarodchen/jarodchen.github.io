@@ -1,6 +1,6 @@
 ---
 title: 数据编码与演化——如何做到不停机变更 Schema？
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "数据编码", "序列化", "Protobuf", "Avro", "Thrift", "兼容性"]
 category: 读书笔记
 series: DDIA 精读系列

@@ -1,6 +1,6 @@
 ---
 title: 可靠性——当故障来临，系统如何 survive？
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "可靠性", "容错设计", "故障恢复", "混沌工程"]
 category: 读书笔记
 banner: /images/architect1.webp

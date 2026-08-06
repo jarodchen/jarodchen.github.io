@@ -1,6 +1,6 @@
 ---
 title: 流处理——从 Kafka 到 Flink，实时数据处理的演进
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "流处理", "Kafka", "Flink", "事件流", "实时数据处理"]
 category: 读书笔记
 banner: /images/architect1.webp

@@ -1,6 +1,6 @@
 ---
 title: 读完后该读什么？——DDIA 延伸阅读指南
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "延伸阅读", "分布式系统", "推荐书单", "学习路径"]
 category: 读书笔记
 banner: /images/architect1.webp

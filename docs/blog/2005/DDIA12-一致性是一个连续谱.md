@@ -1,6 +1,6 @@
 ---
 title: 一致性是一个连续谱——线性一致性、因果一致性、最终一致性
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "一致性", "线性一致性", "因果一致性", "最终一致性", "CAP定理"]
 category: 读书笔记
 banner: /images/architect1.webp

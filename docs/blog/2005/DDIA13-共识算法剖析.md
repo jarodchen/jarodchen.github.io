@@ -1,6 +1,6 @@
 ---
 title: 共识算法剖析——从 Paxos 到 Raft
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "共识算法", "Paxos", "Raft", "分布式系统", "一致性"]
 category: 读书笔记
 banner: /images/architect1.webp

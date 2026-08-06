@@ -1,6 +1,6 @@
 ---
 title: 从理论到实践——如何用 DDIA 的思维做技术选型？
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "技术选型", "系统设计", "架构决策", "方法论"]
 category: 读书笔记
 banner: /images/architect1.webp

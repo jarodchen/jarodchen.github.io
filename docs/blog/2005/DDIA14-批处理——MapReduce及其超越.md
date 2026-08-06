@@ -1,6 +1,6 @@
 ---
 title: 批处理——MapReduce 及其超越
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "批处理", "MapReduce", "Spark", "数据流引擎", "大数据"]
 category: 读书笔记
 banner: /images/architect1.webp

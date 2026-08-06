@@ -1,6 +1,6 @@
 ---
 title: 存储引擎探秘——LSM-Tree vs B-Tree，谁更胜一筹？
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "存储引擎", "B-Tree", "LSM-Tree", "数据库"]
 category: 读书笔记
 series: DDIA 精读系列

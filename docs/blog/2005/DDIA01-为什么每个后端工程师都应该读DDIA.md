@@ -1,8 +1,7 @@
 ---
 title: "为什么每个后端工程师都应该读DDIA？"
-date: 2026-08-03
+date: 2025-08-03
 tags: ["DDIA", "数据密集型系统设计", "系统设计", "读书笔记", "分布式系统"]
-categories: ["技术读书"]
 series: "DDIA 精读系列"
 series_weight: 1
 description: "这不是一本讲API用法的书，而是一把打开系统设计思维的钥匙。"

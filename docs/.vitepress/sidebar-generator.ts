@@ -78,15 +78,19 @@ export function generateBlogSidebar(): SidebarItem[] {
     return postsByCategory[b].length - postsByCategory[a].length
   })
 
-  // 分类改为简单链接，点击跳转到分类索引页（避免侧边栏下拉过长）
-  categories.forEach(category => {
-    const categoryPosts = postsByCategory[category]
-    const categoryLink = `/blog/categories/${category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
+  // 将所有分类收拢到一个可折叠的「分类」分组下；
+  // 分组只做目录折叠，点击具体分类跳转到对应分类索引页（不在侧边栏展开文章标题）
+  const categoryItems = categories.map(category => ({
+    text: `${category}（${postsByCategory[category].length}）`,
+    link: `/blog/categories/${category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
+  }))
+  if (categoryItems.length) {
     sidebarItems.push({
-      text: `${category}（${categoryPosts.length}）`,
-      link: categoryLink
+      text: '分类',
+      collapsed: true,
+      items: categoryItems
     })
-  })
+  }
 
   // 按年份分组（默认折叠，便于按时间浏览）
   const postsByYear: Record<string, typeof posts> = {}

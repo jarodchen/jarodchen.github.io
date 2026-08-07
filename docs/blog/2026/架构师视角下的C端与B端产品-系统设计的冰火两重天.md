@@ -1,7 +1,7 @@
 ---
 tags: [系统设计, 架构设计]
 related: []
-category: 系统设计
+category: 架构设计
 aliases:
 date: 2026-07-31
 title: 架构师视角：C端与B端产品，系统设计的“冰火两重天”

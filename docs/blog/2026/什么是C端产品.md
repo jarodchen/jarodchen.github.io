@@ -1,7 +1,7 @@
 ---
 tags: [系统设计]
 related: []
-category: 系统设计
+category: 架构设计
 aliases:
 date: 2026-07-30
 banner: /images/c-app.webp

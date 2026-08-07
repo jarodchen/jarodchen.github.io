@@ -14,7 +14,7 @@ description: 系统梳理 ASP.NET Core 中 ActionResult、Minimal API、Endpoint
 
 > 除了核心概念，ASP.NET Core 还有许多“隐藏的宝藏”——从 Minimal API 到 Endpoint Routing，从标准化错误响应到响应压缩，掌握它们能让你从“会用”走向“精通”。
 
-在 ASP.NET Core 面试中，除了常规的核心概念，面试官还会考察一些**高级主题和扩展知识**：IActionResult vs ActionResult<T>、Minimal API 的应用场景、Endpoint Routing 的设计理念、标准化错误响应格式等。这些问题往往是区分“知其然”和“知其所以然”的关键。
+在 ASP.NET Core 面试中，除了常规的核心概念，面试官还会考察一些**高级主题和扩展知识**：IActionResult vs ActionResult`<T>`、Minimal API 的应用场景、Endpoint Routing 的设计理念、标准化错误响应格式等。这些问题往往是区分“知其然”和“知其所以然”的关键。
 
 本文将继续补充 ASP.NET Core 的高阶知识点，覆盖从基础到进阶，帮助你在面试中展现更完整的技术视野。
 
@@ -22,7 +22,7 @@ description: 系统梳理 ASP.NET Core 中 ActionResult、Minimal API、Endpoint
 
 ## 第一部分：控制器与结果篇
 
-### IActionResult 与 ActionResult<T> 的区别
+### IActionResult 与 ActionResult`<T>` 的区别
 
 在 ASP.NET Core 控制器中，Action 方法的返回类型有两种常见选择：`IActionResult` 和 `ActionResult<T>`。
 
@@ -45,7 +45,7 @@ public IActionResult GetProduct(int id)
 - 灵活：可返回任意结果类型（`OkResult`、`NotFoundResult`、`RedirectResult` 等）
 - 无类型信息：返回值的类型对框架不可见，需要额外的 `[ProducesResponseType]` 特性辅助 Swagger
 
-#### ActionResult<T>（泛型）
+#### ActionResult`<T>`（泛型）
 
 `ActionResult<T>` 是一个泛型类型，将 HTTP 响应和强类型数据结合在一起。
 

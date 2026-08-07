@@ -176,7 +176,7 @@ public sealed class LazySingleton
 ## 真实世界里的单例们
 
 | 语言/框架 | 例子 |
-|--||
+|--|---|
 | JavaScript | Redux store、Vuex store、React Context |
 | TypeScript | Angular 服务（默认单例）、NestJS 的 `@Injectable()` 服务 |
 | C# | ASP.NET Core 的 `IConfiguration`、`ILogger`（默认） |

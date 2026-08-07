@@ -3,7 +3,10 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 import { generateBlogSidebar, updateArchivesPage, updateBlogIndexPage } from './blog-utils'
 import { RssPlugin } from 'vitepress-plugin-rss'
 import { BiDirectionalLinks } from '@nolebase/markdown-it-bi-directional-links' // [!code ++]
-
+import callout from 'vitepress-plugin-callout'
+// import { createRequire } from 'module'
+// const require = createRequire(import.meta.url)
+// const mdItObsidianCallouts = require('markdown-it-obsidian-callouts')
 
 // 启动时自动生成博客首页和归档页面（仅执行一次）
 updateBlogIndexPage()
@@ -103,6 +106,7 @@ export default withMermaid(defineConfig({
         dir: './docs',          // 链接解析的根目录，默认文档根目录
         includesPatterns: ['**/*.md'] // 匹配文件模式
       }) as any)
+      md.use(callout)
     }
   },
   

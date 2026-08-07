@@ -232,4 +232,8 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--vp-c-text-3);
 }
+
+.vp-doc h2{
+  border-top: none
+}
 </style>

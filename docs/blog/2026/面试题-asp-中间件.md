@@ -1,10 +1,8 @@
 ---
 tags:
-  - aspnetcore
-category: aspnetcore
+category: .NET Core
 categories:
   - 面试
-  - aspnetcore
 date: 2026-05-07T16:19:00
 banner: /images/aspnetcore1.webp
 title: ASP.NET Core 面试题 - 中间件管道

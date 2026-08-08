@@ -1,7 +1,6 @@
 ---
 tags: [网络基础, IP地址, DNS, MAC地址, ARP, 交换机, 路由器, 端口, TCP/IP, 比喻学习]
 category: 计算机网络
-categories: [技术科普, 编程基础]
 title: 从我家到老张家：一个故事搞懂网络通信全流程
 date: 2025-08-06T11:02:00
 banner: /images/network.webp

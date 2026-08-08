@@ -1,7 +1,8 @@
 ---
-tags: [设计模式, 单例模式, ASP.NET Core, 依赖注入, 线程安全]
+tags: ["设计模式", "单例模式", "ASP.NET Core", "依赖注入", "线程安全"]
 category: 设计模式
-categories: [设计模式, .NET Core]
+categories:
+  - .NET Core
 title: ASP.NET Core 中的单例模式：从基础到最佳实践
 date: 2026-08-06T11:02:00
 banner: /images/aspnetcore1.webp

@@ -7,7 +7,7 @@ category: 设计模式
 categories:
 title: 建造者模式：像定制奶茶一样构建复杂对象
 date: 2026-08-08T11:02:00
-banner: /images/image.webp
+banner: /images/gof/builder.webp
 description: 从奶茶定制的故事入手，深入浅出地讲解建造者模式的原理、结构和实践，帮你彻底掌握这个创建型设计模式。附 Java、Python、Go、Rust 等多语言代码示例。
 type: 创建型模式
 ---

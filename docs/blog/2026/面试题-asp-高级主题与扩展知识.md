@@ -938,7 +938,7 @@ builder.Services.AddControllers()
 
 本文涵盖了 ASP.NET Core 的高级主题和扩展知识：
 
-- **IActionResult vs ActionResult<T>**：简单 API 用 `ActionResult<T>`，复杂场景用 `IActionResult`
+- **IActionResult vs ActionResult`<T>`**：简单 API 用 `ActionResult<T>`，复杂场景用 `IActionResult`
 - **Startup 角色的演变**：.NET 6+ 采用 Minimal Hosting，更精简灵活
 - **Minimal API**：轻量级 API 开发模式，适合微服务和快速原型
 - **Endpoint Routing**：集中式路由系统，将路由匹配与中间件解耦
@@ -952,6 +952,6 @@ builder.Services.AddControllers()
 
 回顾全文，记住三个核心原则：
 
-1. **选择合适的工具**：根据场景选择 Minimal API vs Controllers、ActionResult<T> vs IActionResult
+1. **选择合适的工具**：根据场景选择 Minimal API vs Controllers、ActionResult`<T>` vs IActionResult
 2. **遵循标准化**：使用 ProblemDetails 标准化错误响应，使用 OpenAPI 标准化文档
 3. **关注性能和用户体验**：启用响应压缩、支持请求取消、配置合理上传限制

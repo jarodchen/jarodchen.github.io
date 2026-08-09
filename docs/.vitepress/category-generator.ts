@@ -57,9 +57,6 @@ description: 按分类浏览技术文章
 
 `
 
-    // 生成分类卡片网格
-    content += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 32px 0;">\n\n`
-
     const categoryIcons: Record<string, string> = {
       '.NET 开发': '🔧',
       '前端开发': '🌐',
@@ -70,6 +67,41 @@ description: 按分类浏览技术文章
       '学习笔记': '📝',
       '未分类': '📁'
     }
+
+    // 热门分类精选：按文章数降序取前 5，排除「未分类」
+    const hotRaw = categoryNames
+      .filter(name => name !== '未分类')
+      .map(name => ({ name, count: categories[name].length }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5)
+    const hotNames = hotRaw.length ? hotRaw.map(c => c.name) : categoryNames.slice(0, 5)
+
+    const hotPosts = hotNames.map(name => {
+      const icon = categoryIcons[name] || '📁'
+      const posts = categories[name]
+      const link = `/blog/categories/${name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
+      const latest = posts.slice(0, 3).map(p => p.title).join('、')
+      return {
+        title: `${icon} ${name}（${posts.length} 篇）`,
+        description: latest ? `最新：${latest}` : '',
+        link
+      }
+    })
+    const hotJson = JSON.stringify(hotPosts)
+      .replace(/</g, '\\u003c')
+      .replace(/\$\{/g, '\\u0024\\u007b')
+
+    // 顶部热门分类精选轮播（与下方网格不重复：只展示文章数最多的几个）
+    content += `<script setup>
+const hotCats = ${hotJson}
+</script>
+
+<HomeCarouselPosts :posts="hotCats" variant="text" :count="5" :interval="5000" />
+
+`
+
+    // 生成分类卡片网格
+    content += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 32px 0;">\n\n`
 
     categoryNames.forEach(category => {
       const icon = categoryIcons[category] || '📁'

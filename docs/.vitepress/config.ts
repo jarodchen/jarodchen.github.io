@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
 import { generateBlogSidebar, updateArchivesPage, updateBlogIndexPage } from './blog-utils'
+import { updateAllCategoryPages } from './category-generator'
+import { updateAllTagPages } from './tag-generator'
 import { RssPlugin } from 'vitepress-plugin-rss'
 import { BiDirectionalLinks } from '@nolebase/markdown-it-bi-directional-links' // [!code ++]
 import callout from 'vitepress-plugin-callout'
@@ -8,9 +10,11 @@ import callout from 'vitepress-plugin-callout'
 // const require = createRequire(import.meta.url)
 // const mdItObsidianCallouts = require('markdown-it-obsidian-callouts')
 
-// 启动时自动生成博客首页和归档页面（仅执行一次）
+// 启动时自动生成博客首页、归档页面、分类页面和标签页面（仅执行一次，build 与 dev 均执行）
 updateBlogIndexPage()
 updateArchivesPage()
+updateAllCategoryPages()
+updateAllTagPages()
 
 // RSS 配置
 const rssOptions = {

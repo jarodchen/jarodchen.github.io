@@ -13,16 +13,6 @@ const __dirname = path.dirname(__filename)
 let updateTimer: NodeJS.Timeout | null = null;
 let isUpdating = false;
 
-// 启动时自动生成博客首页、归档页面、分类页面和标签页面（仅执行一次）
-try {
-  updateBlogIndexPage();
-  updateArchivesPage();
-  updateAllCategoryPages();
-  updateAllTagPages();
-} catch (error) {
-  console.error('⚠️  初始化生成页面失败:', error.message);
-}
-
 // 仅在开发模式下启动文件监听器（避免阻塞 CI/CD 构建）
 const isDevMode = process.env.NODE_ENV !== 'production' && !process.argv.includes('build')
 

@@ -96,7 +96,7 @@ description: 按分类浏览技术文章
 const hotCats = ${hotJson}
 </script>
 
-<HomeCarouselPosts :posts="hotCats" variant="text" :count="5" :interval="5000" />
+  <!--  <HomeCarouselPosts :posts="hotCats" variant="text" :count="5" :interval="5000" />  -->
 
 `
 

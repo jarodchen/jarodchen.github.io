@@ -236,4 +236,45 @@ html {
 .vp-doc h2{
   border-top: none
 }
+
+/* 首页「最新文章」：封面图轮播浮动在列表右侧，列表保持原 markdown 样式 */
+.recent-carousel {
+  float: right;
+  width: 320px;
+  max-width: 40%;
+  margin: 4px 0 20px 28px;
+}
+
+.rc-label {
+  font-size: 12px;
+  color: var(--vp-c-text-3);
+  margin-bottom: 6px;
+  text-align: right;
+}
+
+/* 清除浮动，避免影响下方「文章分类」区块 */
+.recent-clear {
+  clear: both;
+}
+
+/* 文字卡片轮播（对比块）：列表下方居中、限宽 */
+.recent-carousel-text {
+  max-width: 720px;
+  margin: 12px auto 4px;
+}
+
+@media (max-width: 860px) {
+  .recent-carousel {
+    float: none;
+    width: 100%;
+    max-width: 420px;
+    margin: 16px 0;
+  }
+}
+
+/* 分类索引页顶部文字轮播 */
+.cat-top-carousel {
+  margin: 24px auto 8px;
+  max-width: 760px;
+}
 </style>

@@ -91,3 +91,5 @@ docs/blog/tags/
 *~
 .temp/
 docs/index.md
+
+.vitepress/.tmp-dist

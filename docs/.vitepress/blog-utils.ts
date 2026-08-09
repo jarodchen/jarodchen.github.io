@@ -116,6 +116,11 @@ hero:
 
 # 最新文章 {#recent}
 
+<div class="recent-carousel">
+<div class="rc-label"></div>
+<HomeCarouselPosts :count="3" />
+</div>
+
 `
 
     if (displayPosts.length > 0) {
@@ -138,11 +143,10 @@ hero:
       content += '*暂无文章*\n\n'
     }
 
-    content += `---
-
-
+    content += `<div class="recent-clear"></div>
 
 ---
+
 # 文章分类 {#categories}
 
 <div class="cat-grid">

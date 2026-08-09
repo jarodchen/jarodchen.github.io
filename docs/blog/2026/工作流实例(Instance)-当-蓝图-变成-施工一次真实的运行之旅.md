@@ -1,7 +1,5 @@
 ---
-tags:
-  - 流程引擎
-  - BPM
+tags: ["工作流", "BPM"]
 category: 工作流
 title: 工作流实例（Instance）：当“蓝图”变成“施工”，一次真实的运行之旅
 date: 2026-08-08T11:02:00

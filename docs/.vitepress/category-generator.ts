@@ -225,6 +225,9 @@ const posts = ${postsJson}
 </script>
 
 <div class="category-posts">
+  <CategoryHeroCarousel variant="image" 
+    :posts="posts" :count="5" :interval="5000" />
+
   <a v-for="post in posts" :key="post.link" class="card" :href="post.link">
     <span class="card-thumb">
       <img :src="post.banner || '/images/placeholder.png'" :alt="post.title" loading="lazy" />

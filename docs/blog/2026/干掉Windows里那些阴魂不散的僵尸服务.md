@@ -3,6 +3,7 @@ tags: ["Windows"]
 category: Windows
 title: 干掉 Windows 里那些“阴魂不散”的僵尸服务
 date: 2026-08-04T19:00:00
+banner: /images/科技3.webp
 ---
 
 # 手把手教你干掉 Windows 里那些“阴魂不散”的僵尸服务

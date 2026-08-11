@@ -3,7 +3,7 @@ tags: ["aspnetcore"]
 category: .NET Core
 categories:
   - 面试
- 
+  - 后端开发
 date: 2026-05-07T16:19:00
 banner: /images/aspnetcore1.webp
 title: ASP.NET Core 面试题  CORS 跨域资源共享

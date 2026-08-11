@@ -3,6 +3,8 @@ title: Minimal API 认证授权最佳实践
 date: 2026-04-25
 tags: [.NET Core, Minimal API, Authentication, Authorization]
 category: .NET Core
+categories:
+  - 后端开发
 description: 使用 ASP.NET Core Minimal API 实现现代化的认证授权方案
 banner: /images/auth.webp
 ---

@@ -320,7 +320,8 @@ onBeforeUnmount(stop)
 
 .chc-arrow {
   position: absolute;
-  top: 80px;
+  top: 146px;
+  bottom: 0;
   transform: translateY(-50%);
   width: 28px;
   height: 28px;

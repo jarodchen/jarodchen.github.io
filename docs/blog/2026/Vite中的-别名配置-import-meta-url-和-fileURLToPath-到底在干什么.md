@@ -1,10 +1,5 @@
 ---
-tags:
-  - Vite
-  - 前端工程化
-  - 路径解析
-  - 构建工具
-  - nodejs
+tags: ["Vite", "前端工程化", "路径解析", "构建工具", "nodejs"]
 category: 前端开发
 categories:
 title: Vite 中的 @ 别名配置：`import.meta.url` 和 `fileURLToPath` 到底在干什么？

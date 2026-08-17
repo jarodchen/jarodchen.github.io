@@ -133,7 +133,27 @@ function extractTitle(content, filename) {
 }
 
 /**
+ * 递归收集目录下的所有 .md 文件（完整路径）
+ */
+function walkMarkdownFiles(dir: string): string[] {
+  const results: string[] = []
+  const entries = fs.readdirSync(dir, { withFileTypes: true })
+
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name)
+    if (entry.isDirectory()) {
+      results.push(...walkMarkdownFiles(fullPath))
+    } else if (entry.isFile() && entry.name.endsWith('.md') && entry.name !== 'index.md') {
+      results.push(fullPath)
+    }
+  }
+
+  return results
+}
+
+/**
  * 获取所有博客文章的元数据（用于生成归档页等）
+ * 递归扫描 blog/<年份>/ 下的所有子文件夹
  */
 export function getBlogPostsMetadata(): BlogPostMetadata[] {
   const blogDir = path.resolve(__dirname, '../blog')
@@ -147,17 +167,20 @@ export function getBlogPostsMetadata(): BlogPostMetadata[] {
       const yearPath = path.join(blogDir, year)
       
       if (fs.statSync(yearPath).isDirectory()) {
-        const files = fs.readdirSync(yearPath)
-          .filter(file => file.endsWith('.md'))
+        const files = walkMarkdownFiles(yearPath)
 
-        files.forEach(file => {
-          const filePath = path.join(yearPath, file)
+        files.forEach(filePath => {
           const content = fs.readFileSync(filePath, 'utf-8')
-          
+          // 相对于年份目录的路径，用于生成链接（保留子目录层级）
+          const relPath = path.relative(yearPath, filePath)
+            .replace(/\\/g, '/')
+            .replace(/\.md$/, '')
+          const file = path.basename(filePath)
+
           const metadata = {
             year,
             filename: file,
-            link: `/blog/${year}/${file.replace('.md', '')}`,
+            link: `/blog/${year}/${relPath}`,
             title: extractTitle(content, file),
             date: extractDate(content),
             tags: extractTags(content),

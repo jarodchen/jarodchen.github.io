@@ -1,17 +1,17 @@
 ---
-tags: 
+tags:
   - ASP.NET Core
   - HttpContext
   - 中间件
   - 请求管道
   - .NET
 category: 后端开发
-categories: 
+categories:
   - .NET Core
   - 架构设计
 banner: /images/aspnetcore1.webp
 title: ASP.NET Core 管道里，是谁在传递信息？
-date: "2026-09-15T17:02:00"
+date: 2026-09-15T17:02:00
 description: 管道是河道，请求和响应是水，HttpContext 是随水漂流的容器。搞懂这个比喻，你就搞懂了 ASP.NET Core 中间件最核心的载体。
 pub-blog: true
 ai: true

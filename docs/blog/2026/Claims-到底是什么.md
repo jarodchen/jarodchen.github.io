@@ -8,8 +8,6 @@ tags:
 category: 后端开发
 categories:
   - 身份认证
-  - 技术科普
-  - Web安全
 banner: /images/科技4.webp
 title: Claims 到底是什么？用“点菜”的方式理解 OIDC 里的用户断言
 date: 2026-09-15T11:02:00

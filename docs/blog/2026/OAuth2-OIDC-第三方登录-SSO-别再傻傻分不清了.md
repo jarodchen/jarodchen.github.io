@@ -9,8 +9,6 @@ tags:
 category: 后端开发
 categories:
   - 身份认证
-  - 技术科普
-  - Web安全
 banner: /images/oauth2-oidc.webp
 title: OAuth2、OIDC、第三方登录、SSO：别再傻傻分不清了
 date: 2026-09-15T11:02:00

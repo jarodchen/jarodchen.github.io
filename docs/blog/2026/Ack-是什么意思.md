@@ -1,15 +1,15 @@
 ---
-tags:
+tags: 
   - ACK
   - TCP
   - 消息队列
   - 网络协议
   - 技术科普
 category: 网络
-categories:
+categories: null
 banner: /images/科技4.webp
 title: Ack 到底是什么意思？别只认识 TCP 里的那个 ACK
-date: 2026-09-15T11:02:00
+date: "2026-09-15T11:02:00"
 description: 抓包看到一堆 ACK，写 Kafka 配置遇到 acks，命令行里又冒出个 ack 工具——同一个词，四种完全不同的含义。
 pub-blog: true
 ai: true

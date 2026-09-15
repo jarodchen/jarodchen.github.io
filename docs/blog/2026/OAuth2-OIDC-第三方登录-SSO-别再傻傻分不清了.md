@@ -9,7 +9,7 @@ tags:
 category: 后端开发
 categories:
   - 身份认证
-banner: /images/oauth2-oidc.webp
+banner: /images/科技4.webp
 title: OAuth2、OIDC、第三方登录、SSO：别再傻傻分不清了
 date: 2026-09-15T11:02:00
 description: OAuth2 管授权，OIDC 管认证，第三方登录管“用谁的身份登录”，SSO 管“登录一次能进几个应用”。四个概念，两个维度，一篇文章彻底理清。

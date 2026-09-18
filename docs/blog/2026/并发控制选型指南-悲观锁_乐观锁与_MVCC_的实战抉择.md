@@ -1,9 +1,15 @@
 ---
-tags: [并发控制, 并发, 数据库锁, 数据库]
+tags:
+  - 并发控制
+  - 并发
+  - 数据库锁
+  - 数据库
 category: 架构设计
 date: 2026-08-02
 banner: /images/banner-database.webp
 title: 并发控制选型指南：悲观锁、乐观锁与 MVCC 的实战抉择
+status: published
+pub-blog: true
 ---
 
 # 并发控制选型指南：悲观锁、乐观锁与 MVCC 的实战抉择

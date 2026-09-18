@@ -6,11 +6,8 @@ tags:
   - 区块链
   - Web安全
   - 重放攻击
-category: 网络安全
+category: 网络
 categories:
-  - 技术科普
-  - Web安全
-  - 密码学
 banner: /images/科技3.webp
 title: Nonce 是什么？这个“只用一次的数字”，撑起了半个互联网的安全
 date: 2026-09-15T11:02:00

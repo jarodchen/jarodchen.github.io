@@ -3,7 +3,6 @@ tags:
   - Vue3
 category: 前端开发
 categories:
-  - Vue3
 banner: /images/vue3.webp
 title: Vue3 响应式拦截：为什么对象不能只用 value 的 get set？
 date: 2026-09-18T11:02:00

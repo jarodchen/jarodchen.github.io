@@ -5,7 +5,7 @@ category: 前端开发
 categories:
   - Vue3
 banner: /images/vue3.webp
-title: Vue3 响应式拦截：为什么对象不能只用 .value 的 get set？
+title: Vue3 响应式拦截：为什么对象不能只用 value 的 get set？
 date: 2026-09-18T11:02:00
 description: 如果只用 RefImpl 的 .value get/set 来拦截对象，state.value.foo = 2 这种操作就完全追踪不到。这篇文章把 Vue3 为什么非要用 Proxy 这件事讲清楚。
 pub-blog: true
@@ -13,7 +13,7 @@ ai: true
 status: published
 ---
 
-# Vue3 响应式拦截：为什么对象不能用 .value 的 get set？
+# Vue3 响应式拦截：为什么对象不能用  value 的 get set？
 
 如果 Vue3 只用 `RefImpl` 的 `.value` get/set 来拦截对象，会怎样？
 

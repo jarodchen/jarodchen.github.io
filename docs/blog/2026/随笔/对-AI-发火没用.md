@@ -6,8 +6,7 @@ tags:
   - 提示词
   - 效率工具
 category: 随笔
-categories:
-banner: /images/3.webp
+banner: /images/ai1.webp
 title: 对 AI 发火，为什么没用？
 date: 2026-10-01T11:02:00
 description: AI 没有情绪，不会记仇，也不会因为被骂就反省。发火改变不了它的行为，但你的情绪本身有意义——把它翻译成具体指令，才是解决问题的开始。

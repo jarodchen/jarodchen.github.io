@@ -134,12 +134,17 @@ function extractTitle(content, filename) {
 
 /**
  * 递归收集目录下的所有 .md 文件（完整路径）
+ * 自动跳过自动生成的 categories / tags 目录，以及 index.md
  */
 function walkMarkdownFiles(dir: string): string[] {
   const results: string[] = []
   const entries = fs.readdirSync(dir, { withFileTypes: true })
 
   for (const entry of entries) {
+    // 跳过自动生成的分类 / 标签目录（其中的页面由脚本生成，不是文章）
+    if (entry.isDirectory() && (entry.name === 'categories' || entry.name === 'tags')) {
+      continue
+    }
     const fullPath = path.join(dir, entry.name)
     if (entry.isDirectory()) {
       results.push(...walkMarkdownFiles(fullPath))
@@ -152,47 +157,61 @@ function walkMarkdownFiles(dir: string): string[] {
 }
 
 /**
- * 获取所有博客文章的元数据（用于生成归档页等）
- * 递归扫描 blog/<年份>/ 下的所有子文件夹
+ * 获取所有博客文章的元数据（用于生成首页 / 归档页 / 侧边栏等）
+ * 递归扫描 blog/ 下的【所有】子文件夹（不再局限于 YYYY 年份目录），
+ * 因此放在任意子目录下的文章都能被正确收集。
+ *
+ * - 链接：基于文件相对 blog 根目录的真实路径生成（保留完整子目录层级）
+ * - 年份：优先取 frontmatter 的 date，其次取路径中的 4 位年份段，都没有则为「未知」
  */
 export function getBlogPostsMetadata(): BlogPostMetadata[] {
   const blogDir = path.resolve(__dirname, '../blog')
   const posts: BlogPostMetadata[] = []
 
+  // 需要排除的非文章文件（自动生成或说明性文件）
+  const excludedFiles = new Set(['archives.md', 'rss.md', 'README.md'])
+
   if (fs.existsSync(blogDir)) {
-    const yearDirs = fs.readdirSync(blogDir)
-      .filter(dir => /^\d{4}$/.test(dir))
+    const files = walkMarkdownFiles(blogDir)
 
-    yearDirs.forEach(year => {
-      const yearPath = path.join(blogDir, year)
-      
-      if (fs.statSync(yearPath).isDirectory()) {
-        const files = walkMarkdownFiles(yearPath)
+    files.forEach(filePath => {
+      const file = path.basename(filePath)
+      if (excludedFiles.has(file)) return
 
-        files.forEach(filePath => {
-          const content = fs.readFileSync(filePath, 'utf-8')
-          // 相对于年份目录的路径，用于生成链接（保留子目录层级）
-          const relPath = path.relative(yearPath, filePath)
-            .replace(/\\/g, '/')
-            .replace(/\.md$/, '')
-          const file = path.basename(filePath)
+      const content = fs.readFileSync(filePath, 'utf-8')
+      // 相对于 blog 根目录的真实路径，保留完整子目录层级（用于生成链接）
+      const relPath = path.relative(blogDir, filePath)
+        .replace(/\\/g, '/')
+        .replace(/\.md$/, '')
 
-          const metadata = {
-            year,
-            filename: file,
-            link: `/blog/${year}/${relPath}`,
-            title: extractTitle(content, file),
-            date: extractDate(content),
-            tags: extractTags(content),
-            category: extractCategory(content),
-            categories: extractCategories(content),
-            description: extractDescription(content),
-            banner: extractBanner(content)
-          }
-          
-          posts.push(metadata)
-        })
+      // 年份推导：优先 frontmatter 的 date；否则路径中的 4 位年份段
+      const date = extractDate(content)
+      let year = '未知'
+      if (date) {
+        const d = new Date(date)
+        if (!isNaN(d.getTime())) {
+          year = String(d.getFullYear())
+        }
       }
+      if (year === '未知') {
+        const yearSeg = relPath.split('/').find(seg => /^\d{4}$/.test(seg))
+        if (yearSeg) year = yearSeg
+      }
+
+      const metadata = {
+        year,
+        filename: file,
+        link: `/blog/${relPath}`,
+        title: extractTitle(content, file),
+        date,
+        tags: extractTags(content),
+        category: extractCategory(content),
+        categories: extractCategories(content),
+        description: extractDescription(content),
+        banner: extractBanner(content)
+      }
+
+      posts.push(metadata)
     })
   }
 

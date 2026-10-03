@@ -86,7 +86,11 @@ export function updateBlogIndexPage() {
     })
 
     // 获取最新的文章（最多显示最近一年的最新 5 篇）
-    const latestYear = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))[0]
+    // 仅从 4 位有效数字年份中选最新年份，排除「未知」等非文章分组
+    const numericYears = Object.keys(postsByYear).filter(y => /^\d{4}$/.test(y))
+    const latestYear = numericYears.length
+      ? numericYears.sort((a, b) => parseInt(b) - parseInt(a))[0]
+      : Object.keys(postsByYear)[0]
     const recentPosts = postsByYear[latestYear] || []
     
     // 限制首页只显示最新 5 篇文章

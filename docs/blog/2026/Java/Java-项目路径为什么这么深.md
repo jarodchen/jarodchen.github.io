@@ -4,13 +4,8 @@ tags:
   - Maven
   - 项目结构
   - 包管理
-  - .NET
   - 工程化
 category: 后端开发
-categories:
-  - Java
-  - 工程化
-  - 技术科普
 banner: /images/java.webp
 title: Java 项目路径为什么这么深
 date: 2026-09-22T11:02:00

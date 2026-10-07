@@ -8,7 +8,7 @@ tags:
 category: 后端开发
 banner: /images/java.webp
 title: Java 项目路径为什么这么深
-date: 2026-10-07
+date: 2026-10-06T04:00:00
 description: modules/module-auth/src/main/java/com/mysite/module/auth/config——一条路径里叠了三件事。搞懂它们，你就不会再觉得 Java 反人类了。
 pub-blog: true
 ai: true

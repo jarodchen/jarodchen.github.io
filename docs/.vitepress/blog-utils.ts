@@ -2,6 +2,7 @@
 import { generateBlogSidebar, getBlogPostsMetadata } from './sidebar-generator'
 import { updateAllCategoryPages } from './category-generator'
 import { updateAllTagPages } from './tag-generator'
+import { updateVaultGraphData } from './graph-generator'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -54,6 +55,7 @@ if (isDevMode) {
           updateArchivesPage();
           updateAllCategoryPages();
           updateAllTagPages();
+          updateVaultGraphData();
           console.log('✨ 页面已自动更新\n');
           isUpdating = false;
         }

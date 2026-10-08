@@ -3,6 +3,7 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 import { generateBlogSidebar, updateArchivesPage, updateBlogIndexPage } from './blog-utils'
 import { updateAllCategoryPages } from './category-generator'
 import { updateAllTagPages } from './tag-generator'
+import { updateVaultGraphData } from './graph-generator'
 import { RssPlugin } from 'vitepress-plugin-rss'
 import { BiDirectionalLinks } from '@nolebase/markdown-it-bi-directional-links' // [!code ++]
 import callout from 'vitepress-plugin-callout'
@@ -15,6 +16,8 @@ updateBlogIndexPage()
 updateArchivesPage()
 updateAllCategoryPages()
 updateAllTagPages()
+// 关系图谱数据（/graph 页面消费，写入 docs/public/vault-data.json）
+updateVaultGraphData()
 
 // RSS 配置
 const rssOptions = {
@@ -37,6 +40,7 @@ export default withMermaid(defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '博客', link: '/blog/categories' },
+      { text: '图谱', link: '/graph' },
       { text: '项目', link: '/projects' },
       { text: '知识库', link: '/knowledge-base' },
       { text: '工具箱', link: '/tools' },
@@ -54,6 +58,7 @@ export default withMermaid(defineConfig({
             { text: '博客', link: '/blog/categories' },
             { text: '项目导航', link: '/projects' },
             { text: '知识库', link: '/knowledge-base' },
+            { text: '关系图谱', link: '/graph' },
             { text: 'flog', link: 'https://jarodchen.github.io/flog/', target: '_blank' },
             { text: '工具箱', link: '/tools' },
             { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
@@ -120,7 +125,16 @@ export default withMermaid(defineConfig({
   ],
   
   vite: {
-    plugins: [RssPlugin(rssOptions)]
+    plugins: [RssPlugin(rssOptions)],
+    optimizeDeps: {
+      // 关系图谱组件（vitepress-allyouneed 的 <VaultGraph />）依赖 d3。
+      // 这些包只有打开 /graph 时才会被浏览器请求到，Vite 首次发现时会中途
+      // 重新预打包并强制整页刷新，控制台随之报
+      // 「Failed to load module script: Expected a JavaScript module but the server
+      // responded with a MIME type of text/html」（刷新前发出的模块请求被 SPA
+      // 兜底成 index.html）。这里提前声明，启动即预打包，消掉这次重载。
+      include: ['d3-selection', 'd3-force', 'd3-zoom', 'd3-drag']
+    }
   }
 }))
 

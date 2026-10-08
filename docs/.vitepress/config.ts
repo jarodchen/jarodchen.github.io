@@ -42,10 +42,11 @@ export default withMermaid(defineConfig({
       { text: '博客', link: '/blog/categories' },
       { text: '图谱', link: '/graph' },
       { text: '项目', link: '/projects' },
+      { text: '作品', link: '/works' },
       { text: '知识库', link: '/knowledge-base' },
       { text: '工具箱', link: '/tools' },
       { text: 'flog', link: 'https://jarodchen.github.io/flog/', target: '_blank' },
-      { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
+      // { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
       { text: '关于我', link: '/about' },
     ],
     
@@ -57,11 +58,12 @@ export default withMermaid(defineConfig({
             { text: '首页', link: '/' },
             { text: '博客', link: '/blog/categories' },
             { text: '项目导航', link: '/projects' },
+            { text: '作品导航', link: '/works' },
             { text: '知识库', link: '/knowledge-base' },
             { text: '关系图谱', link: '/graph' },
             { text: 'flog', link: 'https://jarodchen.github.io/flog/', target: '_blank' },
             { text: '工具箱', link: '/tools' },
-            { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
+            // { text: '站点', link: 'https://jarodchen.github.io/jarod-site/', target: '_blank' },
             { text: '关于我', link: '/about' }
           ]
         }

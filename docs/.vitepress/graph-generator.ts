@@ -43,6 +43,7 @@ const CAT_MIN_COUNT = 2
 interface Frontmatter {
   title?: string
   date?: string
+  slug?: string
   tags: string[]
   categories: string[]
 }
@@ -120,6 +121,7 @@ function parseFrontmatter(content: string): { data: Frontmatter; body: string } 
     else if (key === 'tags') data.tags.push(...parseInlineList(value))
     else if (key === 'category') data.categories.push(unquote(value))
     else if (key === 'categories') data.categories.push(...parseInlineList(value))
+    else if (key === 'slug') data.slug = unquote(value)
   }
 
   return { data, body: content.slice(matched[0].length) }
@@ -314,7 +316,9 @@ export function updateVaultGraphData() {
       const node: GraphNode = {
         id: relPath,
         title,
-        url: toUrl(relPath),
+        url: data.slug
+          ? `/blog/${data.slug.replace(/^\/+/, '').replace(/\.(md|html)$/i, '')}.html`
+          : toUrl(relPath),
         kind: 'note',
         count: 0,
         tags: [...new Set(data.tags)].filter(Boolean),

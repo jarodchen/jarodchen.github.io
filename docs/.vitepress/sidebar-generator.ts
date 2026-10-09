@@ -16,6 +16,7 @@ interface BlogPostMetadata {
   year: string
   filename: string
   link: string
+  slug?: string | null
   title: string
   date: string | null
   tags: string[]
@@ -133,6 +134,24 @@ function extractTitle(content, filename) {
 }
 
 /**
+ * 从 frontmatter 中提取 slug（自定义文章路径）；无则返回 null。
+ * 仅在文件开头的 --- 块内匹配，避免误抓正文里的 slug: 示例。
+ * 自动清理前导斜杠与尾部 .md / .html。
+ */
+function extractSlug(content: string): string | null {
+  const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---[ \t]*(\r?\n|$)/)
+  if (!fm) return null
+  const m = fm[1].match(/^slug:\s*(.+?)\s*$/m)
+  if (!m || !m[1]) return null
+  const slug = m[1]
+    .replace(/['"]/g, '')
+    .trim()
+    .replace(/^\/+/, '')
+    .replace(/\.(md|html)$/i, '')
+  return slug || null
+}
+
+/**
  * 递归收集目录下的所有 .md 文件（完整路径）
  * 自动跳过自动生成的 categories / tags 目录，以及 index.md
  */
@@ -198,10 +217,13 @@ export function getBlogPostsMetadata(): BlogPostMetadata[] {
         if (yearSeg) year = yearSeg
       }
 
+      const slug = extractSlug(content)
+      const linkPath = slug ? `blog/${slug}` : `blog/${relPath}`
       const metadata = {
         year,
         filename: file,
-        link: `/blog/${relPath}`,
+        slug: slug ?? null,
+        link: `/${linkPath}`,
         title: extractTitle(content, file),
         date,
         tags: extractTags(content),
@@ -322,4 +344,47 @@ export function getAllTags(): Record<string, number> {
   })
 
   return tags
+}
+
+/**
+ * 构建 VitePress rewrites 映射：把真实文件路径路由改写为 frontmatter 的 slug。
+ * 仅对配置了 slug 的笔记生效；无 slug 的笔记不出现在映射里（沿用原路径）。
+ * from / to 均为相对 srcDir（docs）的路径，不带 .md；to 无前导斜杠（符合 VitePress rewrites 格式）。
+ */
+export function getBlogRewrites(): Record<string, string> {
+  const blogDir = path.resolve(__dirname, '../blog')
+  const rewrites: Record<string, string> = {}
+  if (!fs.existsSync(blogDir)) return rewrites
+
+  const excluded = new Set(['archives.md', 'rss.md', 'README.md'])
+  const seen = new Map<string, string>()
+  const files = walkMarkdownFiles(blogDir)
+
+  for (const filePath of files) {
+    const file = path.basename(filePath)
+    if (excluded.has(file)) continue
+
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const slug = extractSlug(content)
+    if (!slug) continue
+
+    const relPath = path
+      .relative(blogDir, filePath)
+      .replace(/\\/g, '/')
+      .replace(/\.md$/, '')
+    // VitePress rewrites 的 from / to 都要带 .md 扩展名（见官方 Routing 指南示例）
+    const from = `blog/${relPath}.md`
+    const to = `blog/${slug}.md`
+    if (from === to) continue
+
+    if (seen.has(to)) {
+      console.warn(
+        `[slug] 冲突：多篇笔记使用了相同 slug "${slug}"（${seen.get(to)} 与 ${from}），后写覆盖前写`
+      )
+    }
+    seen.set(to, from)
+    rewrites[from] = to
+  }
+
+  return rewrites
 }

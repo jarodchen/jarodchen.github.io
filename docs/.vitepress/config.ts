@@ -4,6 +4,7 @@ import { generateBlogSidebar, updateArchivesPage, updateBlogIndexPage } from './
 import { updateAllCategoryPages } from './category-generator'
 import { updateAllTagPages } from './tag-generator'
 import { updateVaultGraphData } from './graph-generator'
+import { getBlogRewrites } from './sidebar-generator'
 import { RssPlugin } from 'vitepress-plugin-rss'
 import { BiDirectionalLinks } from '@nolebase/markdown-it-bi-directional-links' // [!code ++]
 import callout from 'vitepress-plugin-callout'
@@ -29,6 +30,9 @@ const rssOptions = {
 export default withMermaid(defineConfig({
   title: "Jarod Chen's GitHub Pages",
   description: '技术学习历程、项目实践和知识分享',
+
+  // 自定义 slug：每篇笔记 frontmatter 的 slug 字段覆盖默认文件路径路由；无则降级为原路径
+  rewrites: getBlogRewrites(),
 
   // Mermaid 图表配置（流程图、时序图、类图等）
   mermaid: {

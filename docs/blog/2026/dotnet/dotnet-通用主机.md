@@ -13,6 +13,7 @@ tags:
   - 深度解析
   - Host
   - 原理
+slug: dotnet-generic-host
 ---
 
 # 通用主机：.NET 世界里那个默默撑起一切的东西

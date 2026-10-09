@@ -3,9 +3,13 @@ title: 单例模式：一个“唯一”的倔强
 description: 确保一个类只有一个实例，并提供一个全局访问点来访问这个唯一实例。
 purpose: 保证类只有一个实例，提供全局访问点，控制实例的创建和生命周期
 date: 2026-08-05T23:24:00
-category: 设计模式
-tags: [设计模式,GOF,创建型模式]
 banner: /images/gof/singleton.webp
+category: 设计模式
+tags:
+  - 教程
+  - GOF
+  - 创建型模式
+  - 单例
 ---
 
 # 单例模式：一个“唯一”的倔强

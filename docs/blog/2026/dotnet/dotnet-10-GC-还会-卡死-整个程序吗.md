@@ -1,15 +1,4 @@
 ---
-tags:
-  - .NET 10
-  - GC
-  - 垃圾回收
-  - Stop-The-World
-  - 性能优化
-  - 后台GC
-category: 后端开发
-categories:
-  - .NET Core
-  - 性能优化
 banner: /images/banner-csharp.webp
 title: .NET 10 的 GC，还会“卡死”整个程序吗？
 date: 2026-09-15T11:02:00
@@ -17,6 +6,11 @@ description: 答案依然有点微妙：会。但停下来的时间，已经从 
 pub-blog: true
 ai: true
 status: published
+category: .NET Core
+tags:
+  - 深度解析
+  - GC
+  - 性能
 ---
 
 # .NET 10 的 GC，还会“卡死”整个程序吗？

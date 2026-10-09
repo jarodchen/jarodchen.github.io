@@ -1,11 +1,4 @@
 ---
-tags:
-  - AI
-  - 人机交互
-  - 情绪管理
-  - 提示词
-  - 效率工具
-category: 随笔
 banner: /images/ai1.webp
 title: 对 AI 发火，为什么没用？
 date: 2026-10-01T11:02:00
@@ -13,6 +6,12 @@ description: AI 没有情绪，不会记仇，也不会因为被骂就反省。�
 pub-blog: true
 ai: true
 status: published
+category: 随笔
+tags:
+  - 随笔
+  - AI
+  - 效率
+  - 提示词
 ---
 
 # 对 AI 发火，为什么没用？

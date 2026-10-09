@@ -1,12 +1,16 @@
 ---
-tags: ["设计模式", "建造者模式", "ASP.NET Core", "依赖注入", "中间件", "配置系统"]
-category: 设计模式
-categories:
-  - .NET Core
 title: ASP.NET Core 中的建造者模式：从 Host 到 Middleware，无处不在的构建艺术
 date: 2026-08-08T11:02:00
 banner: /images/aspnetcore1.webp
 description: 深入剖析建造者模式在 ASP.NET Core 框架中的实际应用，从 IHostBuilder、WebApplicationBuilder 到中间件管道和配置系统，带你理解微软为何如此钟爱这个模式。
+category: 设计模式
+categories:
+  - .NET Core
+tags:
+  - 教程
+  - 建造者
+  - 中间件
+  - 配置系统
 ---
 
 # ASP.NET Core 中的建造者模式：从 Host 到 Middleware，无处不在的构建艺术

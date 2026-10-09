@@ -1,12 +1,16 @@
 ---
-tags: ["设计模式", "单例模式", "ASP.NET Core", "依赖注入", "线程安全"]
-category: 设计模式
-categories:
-  - .NET Core
 title: ASP.NET Core 中的单例模式：从基础到最佳实践
 date: 2026-08-06T11:02:00
 banner: /images/aspnetcore1.webp
 description: 深入解析 ASP.NET Core 中单例模式的应用，涵盖 DI 容器注册、框架内置服务、中间件集成及线程安全等核心要点，帮助开发者正确使用单例模式。
+category: 设计模式
+categories:
+  - .NET Core
+tags:
+  - 教程
+  - 单例
+  - 依赖注入
+  - 线程安全
 ---
 
 # ASP.NET Core 中的单例模式：从基础到最佳实践

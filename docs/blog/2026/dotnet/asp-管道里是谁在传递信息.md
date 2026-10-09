@@ -3,17 +3,16 @@ title: ASP.NET Core 管道里，是谁在传递信息？
 date: 2026-09-15T17:02:00
 description: 管道是河道，请求和响应是水，HttpContext 是随水漂流的容器。搞懂这个比喻，你就搞懂了 ASP.NET Core 中间件最核心的载体。
 banner: /images/aspnetcore1.webp
-
-category: 后端开发
-
-tags:
-  - 概念/HttpContext
-  - 概念/中间件
-  - 概念/请求管道
-
 status: published
 pub-blog: true
 ai: true
+category: .NET Core
+categories:
+  - 后端开发
+tags:
+  - 深度解析
+  - 中间件
+  - 原理
 ---
 # ASP.NET Core 管道里，是谁在传递信息？
 

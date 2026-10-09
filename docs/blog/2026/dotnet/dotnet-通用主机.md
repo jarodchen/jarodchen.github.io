@@ -1,16 +1,4 @@
 ---
-tags:
-  - 通用主机
-  - Generic Host
-  - .NET
-  - 依赖注入
-  - 生命周期
-  - WPF
-  - Worker Service
-category: 后端开发
-categories:
-  - .NET Core
-  - 架构设计
 banner: /images/aspnetcore1.webp
 title: 通用主机：.NET 世界里那个默默撑起一切的东西
 date: 2026-09-15T11:02:00
@@ -18,6 +6,13 @@ description: 控制台、Worker、ASP.NET Core、WPF、WinForms——它们的�
 pub-blog: true
 ai: true
 status: published
+category: .NET Core
+categories:
+  - 后端开发
+tags:
+  - 深度解析
+  - Host
+  - 原理
 ---
 
 # 通用主机：.NET 世界里那个默默撑起一切的东西

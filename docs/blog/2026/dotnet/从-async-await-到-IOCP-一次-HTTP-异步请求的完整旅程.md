@@ -1,10 +1,4 @@
 ---
-tags:
-  - 异步编程
-  - 操作系统
-category: 后端开发
-categories:
-  - .NET Core
 banner: /images/aspnetcore1.webp
 title: 从 async/await 到 IOCP：一次 HTTP 异步请求的完整旅程
 date: 2026-10-03T11:02:00
@@ -12,6 +6,13 @@ description: 请求发出去了，线程也回了线程池，那响应回来时�
 pub-blog: true
 ai: true
 status: published
+category: .NET Core
+categories:
+  - 后端开发
+tags:
+  - 深度解析
+  - 异步
+  - 原理
 ---
 # 从 async/await 到 IOCP：一次 HTTP 异步请求的完整旅程
 

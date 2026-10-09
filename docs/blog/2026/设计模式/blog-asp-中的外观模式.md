@@ -1,12 +1,4 @@
 ---
-tags:
-  - 设计模式
-  - 外观模式
-  - ASP.NET Core
-  - 架构设计
-category: 设计模式
-categories:
-  - .NET Core
 banner: /images/aspnetcore1.webp
 title: 外观模式：ASP.NET Core 里那些让你“无痛”写代码的秘密武器
 date: 2026-09-06T11:02:00
@@ -14,6 +6,13 @@ description: 从 IServiceCollection 到 WebApplication，从 HttpContext 到 Con
 pub-blog: true
 ai: true
 status: published
+category: 设计模式
+categories:
+  - .NET Core
+tags:
+  - 教程
+  - 外观模式
+  - 架构设计
 ---
 
 # 外观模式：ASP.NET Core 里那些让你“无痛”写代码的秘密武器

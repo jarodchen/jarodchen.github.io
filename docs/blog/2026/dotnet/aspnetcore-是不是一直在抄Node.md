@@ -1,15 +1,4 @@
 ---
-tags:
-  - ASP.NET Core
-  - Node.js
-  - Express
-  - NestJS
-  - Web框架
-  - 架构设计
-category: 后端开发
-categories:
-  - .NET Core
-  - 架构设计
 banner: /images/aspnetcore1.webp
 title: ASP.NET Core 是不是一直在抄 Node.js？
 date: 2026-09-15T11:02:00
@@ -17,6 +6,13 @@ description: 中间件管道长得像 Express，DI 容器像 NestJS——ASP.NET
 pub-blog: true
 ai: true
 status: published
+category: .NET Core
+categories:
+  - 后端开发
+tags:
+  - 随笔
+  - 对比
+  - Node.js
 ---
 
 # ASP.NET Core 是不是一直在抄 Node.js

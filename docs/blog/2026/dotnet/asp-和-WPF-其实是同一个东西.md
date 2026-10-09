@@ -1,16 +1,4 @@
 ---
-tags:
-  - .NET
-  - ASP.NET Core
-  - WPF
-  - WinForms
-  - 依赖注入
-  - 通用主机
-  - 架构设计
-category: 后端开发
-categories:
-  - .NET Core
-  - 架构设计
 banner: /images/aspnetcore1.webp
 title: ASP.NET Core 和 WPF，Winform 其实是同一个东西
 date: 2026-09-14T11:02:00
@@ -18,6 +6,11 @@ description: 把两段启动代码并排放一起，你会发现除了 UI 和触
 ai: false
 pub-blog: true
 status: published
+category: .NET Core
+tags:
+  - 深度解析
+  - 设计思想
+  - 对比
 ---
 
 # ASP.NET Core 和 WPF，Winform 其实是同一个东西

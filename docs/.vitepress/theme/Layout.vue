@@ -1,11 +1,23 @@
 ﻿<script setup lang="ts">
 import DefaultTheme from 'vitepress/theme'
-import { useData } from 'vitepress'
-import { computed, defineAsyncComponent } from 'vue'
+import { useData, useRoute } from 'vitepress'
+import { computed, defineAsyncComponent, watch } from 'vue'
 import BackToTop from './components/BackToTop.vue'
 
 const { Layout } = DefaultTheme
 const { frontmatter } = useData()
+const route = useRoute()
+
+// 仅内容区滚动时，window 已被锁死，默认主题在路由切换时只会 reset window，
+// 内容区会停留在旧位置。这里手动把内容区滚回顶部（仅在 path 变化时才重置，
+// 不影响页内锚点跳转）。
+watch(
+  () => route.path,
+  () => {
+    const c = document.querySelector<HTMLElement>('.VPContent')
+    if (c) c.scrollTop = 0
+  }
+)
 
 // 仅博客文章页显示元信息（有 title + date 视为文章页）
 const isPost = computed(
@@ -276,5 +288,33 @@ html {
 .cat-top-carousel {
   margin: 24px auto 8px;
   max-width: 760px;
+}
+
+/* ── 桌面端：仅内容区滚动，滚动条不穿过 header（参考 flog 项目）──
+   保留 .VPNav 默认 fixed 浮层不变，只把 .VPContent 变成「从 header 下方
+   开始、高度 = 视口 - 顶栏高度」的独立滚动容器。整窗不再滚动
+   （overflow:hidden），于是窗口滚动条消失；内容滚动条起始于 header 之下，
+   不会穿过顶栏。仅在 ≥960px 生效，移动端保留整窗滚动。 */
+@media (min-width: 960px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .VPContent {
+    margin-top: var(--vp-nav-height) !important;
+    height: calc(100vh - var(--vp-nav-height)) !important;
+    padding-top: 0 !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  /* 局部导航（分类页 / 文章页）吸顶到内容区顶部：内容区已在 header 之下，
+     无需再为 fixed 顶栏留 nav 高度，否则会多空出一截 */
+  .VPLocalNav {
+    top: 0 !important;
+  }
 }
 </style>

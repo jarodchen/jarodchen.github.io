@@ -6,37 +6,49 @@ const THRESHOLD = 300
 const showBackTop = ref(false)
 const showBackBottom = ref(false)
 
+// 桌面端 .VPContent 是独立滚动容器（整窗被 overflow:hidden 锁死），
+// 移动端仍是整窗滚动。这里自动判断当前用哪个滚动容器（参考 flog 项目）。
+function getScroller(): HTMLElement | Window {
+  const el = document.querySelector<HTMLElement>('.VPContent')
+  if (el && el.scrollHeight > el.clientHeight + 4) return el
+  return window
+}
+
 function onScroll() {
-  const scrollY = window.scrollY
-  const windowHeight = window.innerHeight
-  const documentHeight = document.documentElement.scrollHeight
+  const s = getScroller()
+  const top = s === window ? window.scrollY : (s as HTMLElement).scrollTop
+  const height = s === window ? window.innerHeight : (s as HTMLElement).clientHeight
+  const scrollHeight =
+    s === window ? document.documentElement.scrollHeight : (s as HTMLElement).scrollHeight
 
   // 显示回到顶部按钮：滚动距离超过阈值
-  showBackTop.value = scrollY > THRESHOLD
-
-  // 显示滚动到底部按钮：距离底部超过窗口高度的一半
-  const distanceToBottom = documentHeight - scrollY - windowHeight
-  showBackBottom.value = distanceToBottom > windowHeight / 2
+  showBackTop.value = top > THRESHOLD
+  // 显示滚动到底部按钮：距离底部超过可视区高度的一半
+  const distanceToBottom = scrollHeight - top - height
+  showBackBottom.value = distanceToBottom > height / 2
 }
 
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  getScroller().scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 function scrollToBottom() {
-  window.scrollTo({
-    top: document.documentElement.scrollHeight - document.documentElement.clientHeight,
-    behavior: 'smooth'
-  });
+  const s = getScroller()
+  const scrollHeight =
+    s === window ? document.documentElement.scrollHeight : (s as HTMLElement).scrollHeight
+  s.scrollTo({ top: scrollHeight, behavior: 'smooth' })
 }
 
 onMounted(() => {
+  // 同时监听 window 与内容容器，桌面端 / 移动端都能正确响应
   window.addEventListener('scroll', onScroll, { passive: true })
+  document.querySelector('.VPContent')?.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
+  document.querySelector('.VPContent')?.removeEventListener('scroll', onScroll)
 })
 </script>
 

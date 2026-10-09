@@ -1,21 +1,23 @@
 ﻿<script setup lang="ts">
 import DefaultTheme from 'vitepress/theme'
 import { useData, useRoute } from 'vitepress'
-import { computed, defineAsyncComponent, watch } from 'vue'
+import { computed, defineAsyncComponent, watch, nextTick } from 'vue'
 import BackToTop from './components/BackToTop.vue'
 
 const { Layout } = DefaultTheme
 const { frontmatter } = useData()
 const route = useRoute()
 
-// 仅内容区滚动时，window 已被锁死，默认主题在路由切换时只会 reset window，
-// 内容区会停留在旧位置。这里手动把内容区滚回顶部（仅在 path 变化时才重置，
-// 不影响页内锚点跳转）。
+// 桌面端滚动容器改成了 .Layout（而非整窗）。VitePress 内置的滚动复位依赖 window 滚动，
+// 对 .Layout 无效，故这里在路由切换（非锚点跳转）时手动把 .Layout 滚回顶部。
 watch(
   () => route.path,
   () => {
-    const c = document.querySelector<HTMLElement>('.VPContent')
-    if (c) c.scrollTop = 0
+    if ((route as { hash?: string }).hash) return // 带锚点的跳转交给 VitePress 自行定位
+    nextTick(() => {
+      const el = document.querySelector<HTMLElement>('.Layout')
+      if (el) el.scrollTop = 0
+    })
   }
 )
 
@@ -290,11 +292,11 @@ html {
   max-width: 760px;
 }
 
-/* ── 桌面端：仅内容区滚动，滚动条不穿过 header（参考 flog 项目）──
-   保留 .VPNav 默认 fixed 浮层不变，只把 .VPContent 变成「从 header 下方
-   开始、高度 = 视口 - 顶栏高度」的独立滚动容器。整窗不再滚动
-   （overflow:hidden），于是窗口滚动条消失；内容滚动条起始于 header 之下，
-   不会穿过顶栏。仅在 ≥960px 生效，移动端保留整窗滚动。 */
+/* ── 桌面端：滚动容器改为整个 .Layout（绝对定位到 header 以下，铺满剩余视口）──
+   整窗不再滚动（overflow:hidden），唯一滚动容器是 .Layout；
+   滚动条只在 header 以下、不穿过 header；
+   页脚 .VPFooter 是 .Layout 子节点，随内容一起滚到末尾、自然排布（不再钉死在视口底）。
+   仅在 ≥960px 生效，移动端保留整窗滚动。 */
 @media (min-width: 960px) {
   html,
   body {
@@ -305,29 +307,30 @@ html {
   /* .Layout 本身是 flex 列：内容区弹性撑满 + 页脚固定高度，二者共同占满 100vh。
      页脚常驻底部、内容区独立滚动，滚动条都从顶栏之下开始，不会穿过 header。
      .VPNav 保持默认 fixed 浮层不变（上一版改成 relative 才导致布局跳动）。 */
-  .Layout {
-    height: 100vh;
-  }
-
-  .VPContent {
-    margin-top: var(--vp-nav-height) !important;
-    flex: 1 1 auto;
+  .Layout.Layout {
+    position: absolute;
+    top: var(--vp-nav-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-top: 0 !important;
     scroll-behavior: smooth;
   }
 
-  /* 页脚常驻底部、不随内容滚动裁掉 */
-  .VPFooter {
-    flex: 0 0 auto;
+  .VPContent {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 
-  /* 局部导航（分类页 / 文章页）吸顶到内容区顶部：内容区已在 header 之下，
-     无需再为 fixed 顶栏留 nav 高度，否则会多空出一截 */
-  .VPLocalNav {
-    top: 0 !important;
+  /* 锚点滚动后标题与 header 留一点间隔即可（header 已由 .Layout 顶边承担） */
+  .VPContent :is(h1, h2, h3, h4, h5, h6) {
+    scroll-margin-top: 16px;
   }
+
+  /* 页脚 .VPFooter 是 .Layout 子节点，随内容一起滚到末尾、自然排布（不再钉死在视口底） */
+
+  /* 局部导航沿用默认 sticky 定位即可（.Layout 已从 header 下方开始） */
 }
 </style>

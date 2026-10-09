@@ -6,10 +6,10 @@ const THRESHOLD = 300
 const showBackTop = ref(false)
 const showBackBottom = ref(false)
 
-// 桌面端 .VPContent 是独立滚动容器（整窗被 overflow:hidden 锁死），
+// 桌面端滚动容器是 .Layout（从 header 下方开始，整窗被 overflow:hidden 锁死），
 // 移动端仍是整窗滚动。这里自动判断当前用哪个滚动容器（参考 flog 项目）。
 function getScroller(): HTMLElement | Window {
-  const el = document.querySelector<HTMLElement>('.VPContent')
+  const el = document.querySelector<HTMLElement>('.Layout')
   if (el && el.scrollHeight > el.clientHeight + 4) return el
   return window
 }
@@ -40,15 +40,15 @@ function scrollToBottom() {
 }
 
 onMounted(() => {
-  // 同时监听 window 与内容容器，桌面端 / 移动端都能正确响应
+  // 同时监听 window 与 .Layout 滚动容器，桌面端 / 移动端都能正确响应
   window.addEventListener('scroll', onScroll, { passive: true })
-  document.querySelector('.VPContent')?.addEventListener('scroll', onScroll, { passive: true })
+  document.querySelector('.Layout')?.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
-  document.querySelector('.VPContent')?.removeEventListener('scroll', onScroll)
+  document.querySelector('.Layout')?.removeEventListener('scroll', onScroll)
 })
 </script>
 

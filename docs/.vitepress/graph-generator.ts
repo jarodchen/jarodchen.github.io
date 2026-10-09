@@ -6,25 +6,32 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 /**
- * 生成关系图谱数据（docs/public/vault-data.json）
+ * 生成关系图谱数据
+ * - 中文：docs/public/vault-data.json（扫描 docs/ 下除 en/ 之外的内容页）
+ * - 英文：docs/public/vault-data-en.json（只扫描 docs/en/ 下的内容页）
  *
- * 图谱视图由 vitepress-allyouneed 的 <VaultGraph /> 组件渲染，它通过 fetch
- * 读取 `/vault-data.json`。本文件负责生成这份数据：
+ * 图谱视图由自定义 <GraphView /> 组件渲染，它按传入的 dataFile prop
+ * fetch 对应语言的数据集。本文件负责生成这两份数据：
  *
- * - 节点：docs/ 下所有「内容页」（排除自动生成的索引 / 分类 / 标签页）
+ * - 节点：对应语言下所有「内容页」（排除自动生成的索引 / 分类 / 标签页）
  * - 实线边（wikilink）：正文中真实的站内链接（markdown 链接、html href、Obsidian 双链）
  * - 虚线边（transclusion）：同标签 / 同分类的关联关系（博客正文之间互相引用很少，
  *   只靠真实链接图谱会散成一团「孤岛」，因此用标签与分类补足结构，页面上会明确说明）
  */
 
 const docsDir = path.resolve(__dirname, '..')
-const outputFile = path.join(docsDir, 'public', 'vault-data.json')
 
 /** 不参与图谱的自动生成页面（相对 docs/，POSIX 风格） */
 const EXCLUDED_FILES = new Set(['index.md', 'blog/index.md', 'blog/archives.md', 'graph.md'])
 
 /** 不参与扫描的目录（相对 docs/，POSIX 风格） */
 const EXCLUDED_DIRS = new Set(['.vitepress', 'public', 'categories', 'tags'])
+
+/**
+ * 英文站点的「导航栏页面」：它们是站点导航（About / Knowledge Base / Projects /
+ * Works / Tools），不是文章，不应进入英文关系图谱。
+ */
+const EN_NAV_PAGES = ['about.md', 'knowledge-base.md', 'projects.md', 'tools.md', 'works.md']
 
 /**
  * 图谱采用**二分图**模型：节点 = 笔记 + 标签 + 分类，边 = 「归属」关系
@@ -299,8 +306,39 @@ function countAssets(dir: string): number {
  * 内容无变化时不写盘，避免 dev 下触发无意义的整页刷新
  */
 export function updateVaultGraphData() {
+  generateGraphData('')
+  generateGraphData('en')
+}
+
+/**
+ * 生成单语言的关系图谱数据。
+ * - locale=''  ：中文图谱，扫描 docs/ 下除 en/ 之外的所有内容页，写 public/vault-data.json
+ * - locale='en'：英文图谱，只扫描 docs/en/ 下的内容页，写 public/vault-data-en.json
+ * 这样英文界面不会把中文博客帖混进图谱。
+ */
+function generateGraphData(locale: '' | 'en') {
   try {
-    const relPaths = collectMarkdownFiles(docsDir)
+    const isEn = locale === 'en'
+    let relPaths = collectMarkdownFiles(docsDir)
+
+    // 按语言过滤：中文图谱排除 en/ 下全部文件；英文图谱只保留 en/ 下文件
+    relPaths = relPaths.filter(p => (isEn ? p.startsWith('en/') : !p.startsWith('en/')))
+    // 排除对应语言的派生页面（首页 / 博客首页 / 归档页 / 图谱页本身）
+    // 英文额外排除站点导航页（About / Knowledge Base / Projects / Works / Tools）
+    const extraExcluded = isEn
+      ? new Set([
+          'en/index.md',
+          'en/blog/index.md',
+          'en/blog/archives.md',
+          'en/graph.md',
+          ...EN_NAV_PAGES.map(f => `en/${f}`)
+        ])
+      : new Set(['index.md', 'blog/index.md', 'blog/archives.md', 'graph.md'])
+    relPaths = relPaths.filter(p => !extraExcluded.has(p))
+
+    const outputFile = isEn
+      ? path.join(docsDir, 'public', 'vault-data-en.json')
+      : path.join(docsDir, 'public', 'vault-data.json')
 
     // ── 节点 ──────────────────────────────────────────────
     const nodes: GraphNode[] = []
@@ -317,7 +355,7 @@ export function updateVaultGraphData() {
         id: relPath,
         title,
         url: data.slug
-          ? `/blog/${data.slug.replace(/^\/+/, '').replace(/\.(md|html)$/i, '')}.html`
+          ? `/${relPath.startsWith('en/') ? 'en/' : ''}blog/${data.slug.replace(/^\/+/, '').replace(/\.(md|html)$/i, '')}.html`
           : toUrl(relPath),
         kind: 'note',
         count: 0,
@@ -512,9 +550,9 @@ export function updateVaultGraphData() {
     fs.mkdirSync(path.dirname(outputFile), { recursive: true })
     fs.writeFileSync(outputFile, JSON.stringify(output), 'utf-8')
     console.log(
-      `✅ 关系图谱数据已更新 (${nodes.length} 个节点 / ${payload.edges.length} 条关联 / ${tagIndex.size} 个标签)`
+      `✅ 关系图谱数据已更新 (${locale || 'zh'}): ${nodes.length} 个节点 / ${payload.edges.length} 条关联 / ${tagIndex.size} 个标签`
     )
   } catch (error) {
-    console.error('❌ 生成关系图谱数据失败:', (error as Error).message)
+    console.error(`❌ 生成关系图谱数据失败 (${locale || 'zh'}):`, (error as Error).message)
   }
 }

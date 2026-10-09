@@ -13,42 +13,35 @@ aside: false
 <style>
 /* ── 解除 VitePress 对「无侧边栏页面」的收窄 ──
    默认主题 VPDoc.vue 里对 .VPDoc:not(.has-sidebar) 主动限宽
-   （container 1104px / content 784px），比有侧边栏时还窄 —— 这正是
-   「关掉侧边栏后可视区没变大」的原因，必须显式解除。
-   该规则是 scoped（带属性选择器），这里用 !important 覆盖；
-   并用 :has() 限定只作用于本页（markdown 里的 <style> 是全局的，防止污染其他页）。 */
-.VPDoc:has(.vp-doc._graph) {
+   （container 1104px / content 784px），比有侧边栏时还窄；同时图谱页仍会
+   为左侧导航留出占位宽度。这里用 :has(.gv) 只作用于真正含图谱组件的页面，
+   强制铺满整屏并清除侧边栏占位宽度（用 !important 覆盖默认主题）。 */
+.VPDoc:has(.gv) {
   padding: 12px 16px 0 !important;
 }
 
-@media (min-width: 960px) {
-  .VPDoc:not(.has-sidebar):has(.vp-doc._graph) .container {
-    max-width: none !important;
-  }
-  .VPDoc:not(.has-sidebar):has(.vp-doc._graph) .content {
-    max-width: none !important;
-  }
-  .VPDoc:has(.vp-doc._graph) .content {
-    padding: 0 !important;
-  }
+.VPDoc:has(.gv) .VPContent {
+  /* 清除任何残留的侧边栏占位宽度 */
+  padding-left: 0 !important;
 }
 
-@media (min-width: 1440px) {
-  .VPDoc:not(.has-sidebar):has(.vp-doc._graph) .container {
+@media (min-width: 960px) {
+  .VPDoc:has(.gv) .container,
+  .VPDoc:has(.gv) .content {
     max-width: none !important;
   }
-  .VPDoc:not(.has-sidebar):has(.vp-doc._graph) .content {
-    max-width: none !important;
+  .VPDoc:has(.gv) .content {
+    padding: 0 !important;
   }
 }
 
 /* ── 整屏不滚动 ──
    页面正文只剩图谱，说明文字已收进面板的「说明」弹窗。
    底部「上下篇导航」和站点页脚会把页面撑出滚动条，本页一并隐藏。 */
-.VPDoc:has(.vp-doc._graph) .VPDocFooter {
+.VPDoc:has(.gv) .VPDocFooter {
   display: none !important;
 }
-body:has(.vp-doc._graph) .VPFooter {
+body:has(.gv) .VPFooter {
   display: none !important;
 }
 

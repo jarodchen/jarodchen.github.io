@@ -7,12 +7,16 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 /**
- * 生成标签索引页面
- * 汇总所有标签，生成标签云页面（/blog/tags/index.md）
+ * 生成标签索引页面（中文 /docs/blog/tags/，英文 /docs/en/blog/tags/）
  */
-export function updateTagsIndexPage() {
+export function updateTagsIndexPage(locale = '') {
   try {
-    const posts = getBlogPostsMetadata()
+    const isEn = !!locale
+    const t = (zh: string, en: string) => (isEn ? en : zh)
+    const prefix = locale ? `/${locale}` : ''
+    const outBase = locale ? `../${locale}/blog/tags` : '../blog/tags'
+
+    const posts = getBlogPostsMetadata(locale)
 
     // 按标签分组
     const postsByTag: Record<string, typeof posts> = {}
@@ -28,13 +32,13 @@ export function updateTagsIndexPage() {
     const tagNames = Object.keys(postsByTag).sort()
 
     let content = `---
-title: 标签索引
-description: 按标签浏览技术文章
+title: ${t('标签索引', 'Tags')}
+description: ${t('按标签浏览技术文章', 'Browse articles by tag')}
 ---
 
-# 🏷️ 标签索引
+# 🏷️ ${t('标签索引', 'Tags')}
 
-按技术主题标签浏览文章，快速定位感兴趣的内容。
+${t('按技术主题标签浏览文章，快速定位感兴趣的内容。', 'Browse articles by technical topic tags to quickly find what interests you.')}
 
 <div class="tags-cloud">
 
@@ -42,7 +46,7 @@ description: 按标签浏览技术文章
 
     tagNames.forEach(tag => {
       const count = postsByTag[tag].length
-      const tagLink = `/blog/tags/${tag.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
+      const tagLink = `${prefix}/blog/tags/${tag.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
       content += `  <a class="tag-pill" href="${tagLink}"><span class="tag-name">${tag}</span><span class="tag-count">${count}</span></a>\n`
     })
 
@@ -108,21 +112,21 @@ description: 按标签浏览技术文章
 
 ---
 
-## 统计信息
+## ${t('统计信息', 'Statistics')}
 
-- **总标签数**: ${tagNames.length} 个
-- **总文章数**: ${posts.length} 篇
+- **${t('总标签数', 'Total tags')}**: ${tagNames.length} ${isEn ? 'tags' : '个'}
+- **${t('总文章数', 'Total posts')}**: ${posts.length} ${isEn ? 'posts' : '篇'}
 
 ---
 
-[← 返回博客首页](../index.md) | [查看所有文章归档](../archives.md)
+[← ${t('返回博客首页', 'Back to blog')}](../index.md)${isEn ? '' : ' | [查看所有文章归档](../archives.md)'}
 
 <!--
   注意：此文件由 tag-generator.ts 自动生成，请勿手动编辑。
 -->
 `
 
-    const outputPath = path.resolve(__dirname, '../blog/tags/index.md')
+    const outputPath = path.resolve(__dirname, `${outBase}/index.md`)
 
     const outputDir = path.dirname(outputPath)
     if (!fs.existsSync(outputDir)) {
@@ -131,18 +135,23 @@ description: 按标签浏览技术文章
 
     fs.writeFileSync(outputPath, content, 'utf-8')
 
-    console.log(`✅ 标签索引页已自动更新 (${tagNames.length} 个标签)`)
+    console.log(`✅ 标签索引页已自动更新 (${locale || 'zh'}): ${tagNames.length} 个标签`)
   } catch (error) {
-    console.error('❌ 更新标签索引页失败:', error.message)
+    console.error(`❌ 更新标签索引页失败 (${locale || 'zh'}):`, (error as Error).message)
   }
 }
 
 /**
  * 生成单个标签的详细页面（卡片网格 + 横幅缩略图）
  */
-export function updateTagPage(tag: string) {
+export function updateTagPage(tag: string, locale = '') {
   try {
-    const posts = getBlogPostsMetadata().filter(post => post.tags.includes(tag))
+    const isEn = !!locale
+    const t = (zh: string, en: string) => (isEn ? en : zh)
+    const prefix = locale ? `/${locale}` : ''
+    const outBase = locale ? `../${locale}/blog/tags` : '../blog/tags'
+
+    const posts = getBlogPostsMetadata(locale).filter(post => post.tags.includes(tag))
 
     if (!posts || posts.length === 0) {
       return
@@ -165,13 +174,13 @@ export function updateTagPage(tag: string) {
 
     const content = `---
 title: ${tag}
-description: 浏览标签「${tag}」相关的所有技术文章
+description: ${t(`浏览标签「${tag}」相关的所有技术文章`, `Browse all articles tagged with "${tag}"`)}
 aside: false
 ---
 
 # 🏷️ ${tag}
 
-本标签共 ${posts.length} 篇文章。
+${t(`本标签共 ${posts.length} 篇文章。`, `This tag has ${posts.length} articles.`)}
 
 <script setup>
 const tagName = ${tagJson}
@@ -192,14 +201,14 @@ const posts = ${postsJson}
       <span v-if="post.description" class="card-desc">{{ post.description }}</span>
       <span class="card-footer">
         <span v-if="post.tags && post.tags.length" class="card-tags">
-          <span v-for="t in post.tags" :key="t" class="tag">{{ t }}</span>
+          <span v-for="tg in post.tags" :key="tg" class="tag">{{ tg }}</span>
         </span>
       </span>
     </span>
   </a>
 </div>
 
-<p class="posts-count">共 {{ posts.length }} 篇文章</p>
+<p class="posts-count">${t(`共 {{ posts.length }} 篇文章`, `{{ posts.length }} articles total`)}</p>
 
 <style scoped>
 .tag-posts {
@@ -335,7 +344,7 @@ const posts = ${postsJson}
 }
 </style>
 
-[← 返回标签索引](./index.md) | [查看所有文章归档](../archives.md)
+[← ${t('返回标签索引', 'Back to tag index')}](./index.md) | [← ${t('返回博客首页', 'Back to blog')}](../index.md)
 
 <!--
   注意：此文件由 tag-generator.ts 自动生成，请勿手动编辑。
@@ -343,7 +352,7 @@ const posts = ${postsJson}
 `
 
     const filename = tag.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-') + '.md'
-    const outputPath = path.resolve(__dirname, `../blog/tags/${filename}`)
+    const outputPath = path.resolve(__dirname, `${outBase}/${filename}`)
 
     const outputDir = path.dirname(outputPath)
     if (!fs.existsSync(outputDir)) {
@@ -352,31 +361,33 @@ const posts = ${postsJson}
 
     fs.writeFileSync(outputPath, content, 'utf-8')
 
-    console.log(`✅ 标签页面已生成: ${tag} (${posts.length} 篇文章)`)
+    console.log(`✅ 标签页面已生成: ${tag} (${locale || 'zh'}) (${posts.length} 篇文章)`)
   } catch (error) {
-    console.error(`❌ 生成标签页面失败 (${tag}):`, error.message)
+    console.error(`❌ 生成标签页面失败 (${locale || 'zh'} ${tag}):`, (error as Error).message)
   }
 }
 
 /**
- * 生成所有标签页面
+ * 生成所有标签页面（默认中英文都生成；传 locale 则只生成该语言）
  */
-export function updateAllTagPages() {
+export function updateAllTagPages(locale?: string) {
   try {
-    const posts = getBlogPostsMetadata()
-    const tags = new Set<string>()
-    posts.forEach(post => post.tags.forEach(tag => tags.add(tag)))
-
+    const locales = locale === undefined ? ['', 'en'] : [locale]
     console.log(`\n🏷️ 开始生成标签页面...`)
+    for (const loc of locales) {
+      const posts = getBlogPostsMetadata(loc)
+      const tags = new Set<string>()
+      posts.forEach(post => post.tags.forEach(tag => tags.add(tag)))
 
-    updateTagsIndexPage()
+      updateTagsIndexPage(loc)
 
-    ;[...tags].forEach(tag => {
-      updateTagPage(tag)
-    })
+      ;[...tags].forEach(tag => {
+        updateTagPage(tag, loc)
+      })
 
-    console.log(`✅ 所有标签页面已生成 (${tags.size} 个标签)\n`)
+      console.log(`✅ 所有标签页面已生成 (${loc || 'zh'}): ${tags.size} 个标签`)
+    }
   } catch (error) {
-    console.error('❌ 生成标签页面失败:', error.message)
+    console.error('❌ 生成标签页面失败:', (error as Error).message)
   }
 }

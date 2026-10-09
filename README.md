@@ -1,4 +1,4 @@
-# Jarod Chen's GitHub Pages
+# Jarod's Tech
 
 个人网站、技术博客和知识库集合。
 

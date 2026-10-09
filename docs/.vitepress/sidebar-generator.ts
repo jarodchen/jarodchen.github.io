@@ -30,25 +30,28 @@ interface BlogPostMetadata {
  * 自动生成博客侧边栏配置
  * 扫描 blog 目录下的所有文章，按年份组织
  */
-export function generateBlogSidebar(): SidebarItem[] {
+export function generateBlogSidebar(locale: string = ''): SidebarItem[] {
   const sidebarItems: SidebarItem[] = []
+  const prefix = locale ? `/${locale}` : ''
+  const isEn = !!locale
+  const t = (zh: string, en: string) => (isEn ? en : zh)
 
 
   // 添加博客首页和归档页
   sidebarItems.push({
     // text: '博客',
     items: [
-      { text: '首页', link: '/blog/' },
+      { text: t('首页', 'Home'), link: `${prefix}/blog/` },
       // { text: '文章归档', link: '/blog/archives' },
-      { text: '分类索引', link: '/blog/categories/' },
-      { text: '标签索引', link: '/blog/tags/' },
+      { text: t('分类索引', 'Categories'), link: `${prefix}/blog/categories/` },
+      { text: t('标签索引', 'Tags'), link: `${prefix}/blog/tags/` },
       // { text: 'RSS 订阅', link: '/blog/rss' }
     ]
   })
 
 
   // 获取所有文章并按分类分组（合并单值 category 与数组 categories）
-  const posts = getBlogPostsMetadata()
+  const posts = getBlogPostsMetadata(locale)
   const postsByCategory: Record<string, typeof posts> = {}
   posts.forEach(post => {
     // 合并 category（单值）与 categories（数组），去重后作为该文章所属的全部分类
@@ -83,11 +86,11 @@ export function generateBlogSidebar(): SidebarItem[] {
   // 分组只做目录折叠，点击具体分类跳转到对应分类索引页（不在侧边栏展开文章标题）
   const categoryItems = categories.map(category => ({
     text: `${category}（${postsByCategory[category].length}）`,
-    link: `/blog/categories/${category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
+    link: `${prefix}/blog/categories/${category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
   }))
   if (categoryItems.length) {
     sidebarItems.push({
-      text: '分类',
+      text: t('分类', 'Categories'),
       collapsed: false,
       items: categoryItems
     })
@@ -106,7 +109,7 @@ export function generateBlogSidebar(): SidebarItem[] {
     .sort((a, b) => parseInt(b) - parseInt(a)) // 年份降序
     .forEach(year => {
       sidebarItems.push({
-        text: `${year} 年`,
+        text: isEn ? `${year}` : `${year} 年`,
         collapsed: false, // 年份默认展开
         items: postsByYear[year].map(post => ({
           text: post.title,
@@ -183,8 +186,8 @@ function walkMarkdownFiles(dir: string): string[] {
  * - 链接：基于文件相对 blog 根目录的真实路径生成（保留完整子目录层级）
  * - 年份：优先取 frontmatter 的 date，其次取路径中的 4 位年份段，都没有则为「未知」
  */
-export function getBlogPostsMetadata(): BlogPostMetadata[] {
-  const blogDir = path.resolve(__dirname, '../blog')
+export function getBlogPostsMetadata(locale: string = ''): BlogPostMetadata[] {
+  const blogDir = locale ? path.resolve(__dirname, `../${locale}/blog`) : path.resolve(__dirname, '../blog')
   const posts: BlogPostMetadata[] = []
 
   // 需要排除的非文章文件（自动生成或说明性文件）
@@ -218,7 +221,8 @@ export function getBlogPostsMetadata(): BlogPostMetadata[] {
       }
 
       const slug = extractSlug(content)
-      const linkPath = slug ? `blog/${slug}` : `blog/${relPath}`
+      const localePrefix = locale ? `${locale}/` : ''
+      const linkPath = slug ? `${localePrefix}blog/${slug}` : `${localePrefix}blog/${relPath}`
       const metadata = {
         year,
         filename: file,
@@ -384,6 +388,35 @@ export function getBlogRewrites(): Record<string, string> {
     }
     seen.set(to, from)
     rewrites[from] = to
+  }
+
+  // 英文区：docs/en/blog 下配置了 slug 的笔记，同样建立 rewrites
+  const enBlogDir = path.resolve(__dirname, '../en/blog')
+  if (fs.existsSync(enBlogDir)) {
+    for (const filePath of walkMarkdownFiles(enBlogDir)) {
+      const file = path.basename(filePath)
+      if (excluded.has(file)) continue
+
+      const content = fs.readFileSync(filePath, 'utf-8')
+      const slug = extractSlug(content)
+      if (!slug) continue
+
+      const relPath = path
+        .relative(enBlogDir, filePath)
+        .replace(/\\/g, '/')
+        .replace(/\.md$/, '')
+      const from = `en/blog/${relPath}.md`
+      const to = `en/blog/${slug}.md`
+      if (from === to) continue
+
+      if (seen.has(to)) {
+        console.warn(
+          `[slug] 冲突：多篇笔记使用了相同 slug "${slug}"（${seen.get(to)} 与 ${from}），后写覆盖前写`
+        )
+      }
+      seen.set(to, from)
+      rewrites[from] = to
+    }
   }
 
   return rewrites

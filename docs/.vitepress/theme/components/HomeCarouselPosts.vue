@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
-import { withBase } from 'vitepress'
+import { withBase, useData } from 'vitepress'
 import { data } from '../recent.data'
 
 const props = withDefaults(
@@ -25,8 +25,11 @@ const props = withDefaults(
   }
 )
 
+const { lang } = useData()
+// 按当前语言选取对应数据集（data 为 { zh, en }）
+const source = computed(() => (lang.value === 'en-US' ? (data?.en ?? []) : (data?.zh ?? [])))
 const posts = computed(() =>
-  (props.posts && props.posts.length ? props.posts : data).slice(0, Math.max(1, props.count))
+  (props.posts && props.posts.length ? props.posts : source.value).slice(0, Math.max(1, props.count))
 )
 
 const active = ref(0)

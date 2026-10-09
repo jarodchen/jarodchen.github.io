@@ -80,20 +80,38 @@ temp/
 docs/_build/
 site/
 
-## VitePress 自动生成的博客文件
+## VitePress 自动生成的页面（由 blog-utils.ts / category-generator.ts / tag-generator.ts 生成）
+## 站点首页
+docs/index.md
+docs/en/index.md
+
+## 博客首页与归档页
 docs/blog/index.md
 docs/blog/archives.md
+docs/en/blog/index.md
+docs/en/blog/archives.md
+
+## 分类 / 标签索引页
 docs/blog/categories/
 docs/blog/tags/
+docs/en/blog/categories/
+docs/en/blog/tags/
 
 ## 关系图谱自动生成的数据（由 docs/.vitepress/graph-generator.ts 生成）
 docs/public/vault-data.json
+docs/public/vault-data-en.json
+
+## VitePress 构建产物与临时输出目录
+docs/.vitepress/dist/
+docs/.vitepress/dist2/
+docs/.vitepress/dist-verify/
+docs/.vitepress/dist-v2/
+docs/.vitepress/cache/
+.vitepress/.tmp-dist
+.tmp-build/
 
 ## 其他
 *.bak
 *.backup
 *~
 .temp/
-docs/index.md
-
-.vitepress/.tmp-dist

@@ -42,7 +42,7 @@ description: 页面描述
 
 ```ts
 export default defineConfig({
-  title: "Jarod Chen's GitHub Pages",
+  title: "Jarod's Tech",
   themeConfig: {
     nav: [...],             // 顶部导航
     sidebar: {...},         // 侧边栏（按路径匹配）

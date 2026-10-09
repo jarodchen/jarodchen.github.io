@@ -1,19 +1,22 @@
 /**
  * 首页「最新文章」数据加载器（VitePress 构建期数据）
  *
- * 复用 sidebar-generator 的 getBlogPostsMetadata()，结果已按日期降序，
- * 构建期序列化进页面；前端 `import { data }` 即可拿到，运行时零请求。
+ * 同时提供中文与英文两份最新文章列表（分别读取 docs/blog 与 docs/en/blog），
+ * 前端 HomeCarouselPosts 按当前语言（useData().lang）选择对应数据集。
  */
 import { defineLoader } from 'vitepress'
 import { getBlogPostsMetadata } from '../sidebar-generator'
 import type { BlogPostMetadata } from '../sidebar-generator'
 
-declare const data: BlogPostMetadata[]
+declare const data: { zh: BlogPostMetadata[]; en: BlogPostMetadata[] }
 export { data }
 
 export default defineLoader({
-  watch: ['../blog/**/*.md'],
-  load(): BlogPostMetadata[] {
-    return getBlogPostsMetadata()
+  watch: ['../blog/**/*.md', '../en/blog/**/*.md'],
+  load() {
+    return {
+      zh: getBlogPostsMetadata(),
+      en: getBlogPostsMetadata('en')
+    }
   }
 })

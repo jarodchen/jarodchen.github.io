@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed, watch, nextTick } from 'vue'
-import { useRouter, withBase } from 'vitepress'
+import { useRouter, useData, withBase } from 'vitepress'
 import * as d3 from 'd3-selection'
 import {
   forceSimulation,
@@ -16,6 +16,17 @@ import { zoom as d3zoom, zoomIdentity, type ZoomBehavior } from 'd3-zoom'
 import { drag as d3drag } from 'd3-drag'
 
 const router = useRouter()
+
+/** 数据文件：默认中文 /vault-data.json；英文页传 /vault-data-en.json */
+const props = defineProps<{ dataFile?: string }>()
+
+/** 当前语言：英文页（lang 以 en 开头，或路由在 /en/ 下）切换英文 UI 文案 */
+const { lang } = useData()
+const isEn = computed(() =>
+  (lang.value || '').toLowerCase().startsWith('en') || router.route.path.startsWith('/en/'),
+)
+/** 模板/文案双语切换：t('中文', 'English') */
+const t = (zh: string, en: string) => (isEn.value ? en : zh)
 
 /** 节点种类：笔记 / 标签 / 分类（标签与分类是二分图里的「概念节点」） */
 type NodeKind = 'note' | 'tag' | 'category'
@@ -48,11 +59,11 @@ async function load(): Promise<void> {
   loading.value = true
   error.value = null
   try {
-    const res = await fetch(withBase('/vault-data.json'), { cache: 'no-cache' })
+    const res = await fetch(withBase(props.dataFile ?? '/vault-data.json'), { cache: 'no-cache' })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const parsed = (await res.json()) as { nodes: RawNode[]; edges: RawLink[] }
     if (!Array.isArray(parsed.nodes) || !Array.isArray(parsed.edges)) {
-      throw new Error('vault-data.json 字段缺失')
+      throw new Error(t('vault-data.json 字段缺失', 'vault-data.json missing fields'))
     }
     data.value = parsed
   } catch (e) {
@@ -569,7 +580,11 @@ function build(): void {
   linkSel
     .append('title')
     .text((d) =>
-      d.type === 'tag' ? '属于该标签' : d.type === 'category' ? '属于该分类' : '正文链接',
+      d.type === 'tag'
+        ? t('属于该标签', 'Belongs to tag')
+        : d.type === 'category'
+          ? t('属于该分类', 'Belongs to category')
+          : t('正文链接', 'Wiki link'),
     )
 
   const nodeSel = g
@@ -1008,40 +1023,40 @@ watch(
 
 <template>
   <div class="gv">
-    <div v-if="loading" class="gv-loading">加载中…</div>
-    <div v-else-if="error" class="gv-error">图谱数据加载失败：{{ error }}</div>
+    <div v-if="loading" class="gv-loading">{{ t('加载中…', 'Loading…') }}</div>
+    <div v-else-if="error" class="gv-error">{{ t('图谱数据加载失败：', 'Graph data failed to load: ') }}{{ error }}</div>
     <div v-else-if="tooHeavy" class="gv-empty">
-      当前筛选下仍有 {{ nodes.length }} 个节点（上限 {{ maxNodes }}），请继续增加筛选条件。
+      {{ t('当前筛选下仍有', 'Current filter still has') }} {{ nodes.length }} {{ t('个节点（上限', 'nodes (limit') }} {{ maxNodes }}{{ t('），请继续增加筛选条件。', '). Please add more filters.') }}
     </div>
     <div v-else class="gv-body">
       <!-- 左侧：过滤面板（独立滚动，不再占用画布的纵向空间） -->
       <aside class="gv-panel">
-        <input v-model="search" type="search" class="gv-search" placeholder="🔍 搜索标题…" />
+        <input v-model="search" type="search" class="gv-search" :placeholder="t('🔍 搜索标题…', '🔍 Search titles…')" />
 
         <div class="gv-toggles">
-          <label class="gv-toggle"><input v-model="showWikilink" type="checkbox" /> 正文链接</label>
-          <label class="gv-toggle"><input v-model="showTagLinks" type="checkbox" /> 标签归属</label>
-          <label class="gv-toggle"><input v-model="showCategoryLinks" type="checkbox" /> 分类归属</label>
+          <label class="gv-toggle"><input v-model="showWikilink" type="checkbox" /> {{ t('正文链接', 'Wiki links') }}</label>
+          <label class="gv-toggle"><input v-model="showTagLinks" type="checkbox" /> {{ t('标签归属', 'Tag links') }}</label>
+          <label class="gv-toggle"><input v-model="showCategoryLinks" type="checkbox" /> {{ t('分类归属', 'Category links') }}</label>
         </div>
 
         <div class="gv-actions">
-          <button class="gv-reset" type="button" @click="resetFilters">重置</button>
-          <button class="gv-help" type="button" @click="showHelp = true">说明</button>
-          <span class="gv-count">{{ visibleNoteCount }} / {{ totalNodes }} 篇</span>
+          <button class="gv-reset" type="button" @click="resetFilters">{{ t('重置', 'Reset') }}</button>
+          <button class="gv-help" type="button" @click="showHelp = true">{{ t('说明', 'Help') }}</button>
+          <span class="gv-count">{{ visibleNoteCount }} / {{ totalNodes }} {{ t('篇', 'posts') }}</span>
         </div>
 
         <!-- 深度：从「焦点节点」或「当前筛选命中的节点」向外展开 N 跳（无锚点时自动选最高连接笔记兜底） -->
         <div class="gv-field">
           <div class="gv-field-head">
-            <span class="gv-field-label">深度</span>
+            <span class="gv-field-label">{{ t('深度', 'Depth') }}</span>
             <span
               class="gv-info"
               tabindex="0"
-              title="深度围绕一个锚点展开：优先用你点击选中的焦点节点，其次是搜索 / 标签 / 分类命中的笔记；都没有时自动以连接数最高的笔记为起点"
+              :title="t('深度围绕一个锚点展开：优先用你点击选中的焦点节点，其次是搜索 / 标签 / 分类命中的笔记；都没有时自动以连接数最高的笔记为起点', 'Depth expands from an anchor: your clicked focus node first, then notes matched by search / tag / category; if none, the highest-degree note is used as the start.')"
             >
               <span class="gv-info-icon">ⓘ</span>
               <span class="gv-info-tip">
-                深度围绕一个锚点展开：优先用你点击选中的焦点节点，其次是搜索 / 标签 / 分类命中的笔记；都没有时自动以连接数最高的笔记为起点
+                {{ t('深度围绕一个锚点展开：优先用你点击选中的焦点节点，其次是搜索 / 标签 / 分类命中的笔记；都没有时自动以连接数最高的笔记为起点', 'Depth expands from an anchor: your clicked focus node first, then notes matched by search / tag / category; if none, the highest-degree note is used as the start.') }}
               </span>
             </span>
           </div>
@@ -1053,17 +1068,17 @@ watch(
               class="gv-seg-btn"
               :class="{ active: depth === d }"
               :disabled="d > 0 && !canDepth"
-              :title="d > 0 && !canDepth ? '需要图谱中存在笔记节点' : ''"
+              :title="d > 0 && !canDepth ? t('需要图谱中存在笔记节点', 'Graph must contain note nodes') : ''"
               @click="depth = d"
             >
-              {{ d === 0 ? '不限' : d }}
+              {{ d === 0 ? t('不限', 'All') : d }}
             </button>
           </div>
         </div>
 
         <!-- 标签显示：标题普遍很长（中位 24 字），可截断或只留枢纽节点 -->
         <div class="gv-field">
-          <span class="gv-field-label">标签</span>
+          <span class="gv-field-label">{{ t('标签', 'Labels') }}</span>
           <div class="gv-seg">
             <button
               v-for="m in (['all', 'hub', 'none'] as const)"
@@ -1073,13 +1088,13 @@ watch(
               :class="{ active: labelMode === m }"
               @click="labelMode = m"
             >
-              {{ m === 'all' ? '全部' : m === 'hub' ? '枢纽' : '隐藏' }}
+              {{ m === 'all' ? t('全部', 'All') : m === 'hub' ? t('枢纽', 'Hub') : t('隐藏', 'Hidden') }}
             </button>
           </div>
         </div>
 
         <div v-if="focusId" class="gv-focus">
-          <span class="gv-focus-label">焦点</span>
+          <span class="gv-focus-label">{{ t('焦点', 'Focus') }}</span>
           <span class="gv-focus-title" :title="focusTitle">{{ focusTitle }}</span>
           <button class="gv-focus-clear" type="button" aria-label="清除焦点" @click="focusId = null">
             ×
@@ -1088,7 +1103,7 @@ watch(
 
         <div v-if="allTags.length || allCats.length" class="gv-filters">
           <details class="gv-group" open>
-            <summary>标签（已选 {{ selectedTags.length }} / 共 {{ allTags.length }}）</summary>
+            <summary>{{ t('标签', 'Tags') }}（{{ t('已选', 'selected') }} {{ selectedTags.length }} / {{ t('共', 'of') }} {{ allTags.length }}）</summary>
             <div class="gv-chips">
               <button
                 v-for="tg in allTags"
@@ -1103,7 +1118,7 @@ watch(
             </div>
           </details>
           <details v-if="allCats.length" class="gv-group">
-            <summary>分类（已选 {{ selectedCats.length }} / 共 {{ allCats.length }}）</summary>
+            <summary>{{ t('分类', 'Categories') }}（{{ t('已选', 'selected') }} {{ selectedCats.length }} / {{ t('共', 'of') }} {{ allCats.length }}）</summary>
             <div class="gv-chips">
               <button
                 v-for="cg in allCats"
@@ -1123,10 +1138,10 @@ watch(
       <!-- 右侧：图谱画布 -->
       <div ref="canvasRef" class="gv-canvas">
         <div class="gv-canvas-tools">
-          <button class="gv-tool" type="button" title="重排布局" @click="relayout">重排</button>
-          <button class="gv-tool" type="button" title="复位视图" @click="resetView">复位</button>
-          <button class="gv-tool" type="button" title="全屏 / 退出全屏" @click="toggleFullscreen">
-            {{ isFullscreen ? '退出全屏' : '全屏' }}
+          <button class="gv-tool" type="button" :title="t('重排布局', 'Relayout')" @click="relayout">{{ t('重排', 'Relayout') }}</button>
+          <button class="gv-tool" type="button" :title="t('复位视图', 'Reset view')" @click="resetView">{{ t('复位', 'Reset') }}</button>
+          <button class="gv-tool" type="button" :title="t('全屏 / 退出全屏', 'Fullscreen / exit fullscreen')" @click="toggleFullscreen">
+            {{ isFullscreen ? t('退出全屏', 'Exit fullscreen') : t('全屏', 'Fullscreen') }}
           </button>
         </div>
         <div class="ayn-graph-container">
@@ -1141,12 +1156,12 @@ watch(
       class="gv-modal"
       role="dialog"
       aria-modal="true"
-      aria-label="图谱说明"
+      :aria-label="t('图谱说明', 'Graph help')"
       @click.self="showHelp = false"
     >
       <div class="gv-modal-box">
         <div class="gv-modal-head">
-          <h3 class="gv-modal-title">图谱说明</h3>
+          <h3 class="gv-modal-title">{{ t('图谱说明', 'Graph help') }}</h3>
           <button class="gv-modal-close" type="button" aria-label="关闭" @click="showHelp = false">
             ×
           </button>
@@ -1154,81 +1169,80 @@ watch(
 
         <div class="gv-modal-body">
           <p class="gv-modal-lead">
-            🕸️ <b>关系图谱</b>：左侧面板按<b>搜索 / 标签 / 分类</b>筛选，右侧是图谱画布。
+            🕸️ <b>{{ t('关系图谱', 'Relationship graph') }}</b>：{{ t('左侧面板按', 'Filter on the left by') }}<b>{{ t('搜索 / 标签 / 分类', 'search / tag / category') }}</b>{{ t('筛选，右侧是图谱画布。', ', the canvas is on the right.') }}
           </p>
 
-          <h4>🔎 过滤</h4>
+          <h4>🔎 {{ t('过滤', 'Filter') }}</h4>
           <ul>
-            <li><b>搜索框</b>：按标题实时模糊匹配，只保留命中的文章。</li>
-            <li><b>标签</b>：点选标签 chip（括号里是该标签下的文章数）。同时选多个是「或」关系 —— 只要文章带其中任意一个标签就留下。</li>
-            <li><b>分类</b>：同上，按 <code>category</code> / <code>categories</code> 过滤。</li>
-            <li><b>边类型开关</b>：<code>真实链接</code>（正文里的站内链接，实线）、<code>标签/分类关联</code>（虚线）可分别隐藏。</li>
-            <li><b>重置</b>：一键清空所有筛选条件。</li>
+            <li><b>{{ t('搜索框', 'Search box') }}</b>：{{ t('按标题实时模糊匹配，只保留命中的文章。', 'Real-time fuzzy match on titles; only matched articles remain.') }}</li>
+            <li><b>{{ t('标签', 'Tags') }}</b>：{{ t('点选标签 chip（括号里是该标签下的文章数）。同时选多个是「或」关系 —— 只要文章带其中任意一个标签就留下。', 'Click a tag chip (the number in parentheses is its article count). Selecting several is an OR relationship — an article stays if it has any of the chosen tags.') }}</li>
+            <li><b>{{ t('分类', 'Categories') }}</b>：{{ t('同上，按', 'Same as above, filtered by') }} <code>category</code> / <code>categories</code> {{ t('过滤。', '.') }}</li>
+            <li><b>{{ t('边类型开关', 'Edge-type toggles') }}</b>：<code>{{ t('真实链接', 'Real links') }}</code>（{{ t('正文里的站内链接，实线', 'in-body internal links, solid') }}）、<code>{{ t('标签/分类关联', 'tag/category links') }}</code>（{{ t('虚线', 'dashed') }}）{{ t('可分别隐藏。', 'can be hidden independently.') }}</li>
+            <li><b>{{ t('重置', 'Reset') }}</b>：{{ t('一键清空所有筛选条件。', 'Clears all filters in one click.') }}</li>
           </ul>
-          <p>筛选后图谱会对「留下的这部分」重新跑力导向布局，右侧实时显示 <code>当前篇数 / 总篇数</code>。</p>
+          <p>{{ t('筛选后图谱会对「留下的这部分」重新跑力导向布局，右侧实时显示', 'After filtering, the graph re-runs the force layout on the remaining subset, and the right side shows live') }} <code>{{ t('当前篇数 / 总篇数', 'current / total') }}</code>。</p>
 
-          <h4>🏷️ 标签显示</h4>
+          <h4>🏷️ {{ t('标签显示', 'Label display') }}</h4>
           <ul>
-            <li>标题普遍很长（中位 24 字、最长 58 字），所以标签默认<b>截断到 14 字</b>，鼠标悬停节点会显示完整标题。</li>
-            <li><b>全部</b>：所有节点都显示（截断后）。</li>
-            <li><b>枢纽</b>：只给「被关联 ≥3 次」的节点显示，画面最干净。</li>
-            <li><b>隐藏</b>：完全不显示标签，只看点与线（悬停仍可看到标题）。</li>
-          </ul>
-
-          <h4>🎯 深度</h4>
-          <ul>
-            <li>按「层」展开：笔记之间必然隔着一个概念节点（笔记 → 标签 → 笔记），所以 <b>1 层 = 共享标签 / 分类的笔记</b>，2 层再往外扩一圈。选「不限」则忽略深度。</li>
-            <li><b>锚点</b>优先用<b>焦点节点</b>（单击笔记设定）；没有焦点时，用当前搜索 / 标签 / 分类命中的<b>所有笔记</b>作为多锚点；两者都没有时，自动以<b>连接数最高的笔记</b>为起点，保证深度档位一定能看到变化。</li>
-            <li>焦点笔记会在图上描边标出，面板底部显示它的标题，点 <code>×</code> 可清除。</li>
+            <li>{{ t('标题普遍很长（中位 24 字、最长 58 字），所以标签默认', 'Titles are often long (median 24, max 58 chars), so labels are by default') }}<b>{{ t('截断到 14 字', 'truncated to 14 chars') }}</b>{{ t('，鼠标悬停节点会显示完整标题。', '; hovering a node shows the full title.') }}</li>
+            <li><b>{{ t('全部', 'All') }}</b>：{{ t('所有节点都显示（截断后）。', 'Show all nodes (truncated).') }}</li>
+            <li><b>{{ t('枢纽', 'Hub') }}</b>：{{ t('只给「被关联 ≥3 次」的节点显示，画面最干净。', 'Show labels only for nodes linked ≥3 times — cleanest view.') }}</li>
+            <li><b>{{ t('隐藏', 'Hidden') }}</b>：{{ t('完全不显示标签，只看点与线（悬停仍可看到标题）。', 'Hide all labels; dots and lines only (hover still shows titles).') }}</li>
           </ul>
 
-          <h4>🖱️ 操作方式</h4>
+          <h4>🎯 {{ t('深度', 'Depth') }}</h4>
           <ul>
-            <li><b>滚轮 / 触控板</b>：缩放（放大后节点标题会逐渐浮现，和 Obsidian 一致）</li>
-            <li><b>按住拖拽</b>：平移画布；拖动单个节点可调整布局</li>
-            <li><b>悬停节点</b>：高亮该节点与它的邻居，其余淡出</li>
-            <li><b>单击笔记节点</b>：设为焦点（深度的锚点）</li>
-            <li><b>双击笔记节点</b>：打开对应文章</li>
-            <li><b>单击标签 / 分类节点</b>：按它筛选（再点一次取消）</li>
-            <li><b>双击空白处</b>：复位视图</li>
-            <li><b>画布右上工具条</b>：重排布局 / 复位视图 / 全屏切换</li>
+            <li>{{ t('按「层」展开：笔记之间必然隔着一个概念节点（笔记 → 标签 → 笔记），所以', 'Expands by "hops": notes are always separated by a concept node (note → tag → note), so') }} <b>1 {{ t('层', 'hop') }} = {{ t('共享标签 / 分类的笔记', 'notes sharing a tag / category') }}</b>{{ t('，2 层再往外扩一圈。选「不限」则忽略深度。', ', 2 hops goes one ring further. "All" ignores depth.') }}</li>
+            <li><b>{{ t('锚点', 'Anchor') }}</b>{{ t('优先用', 'prefers the') }}<b>{{ t('焦点节点', 'focus node') }}</b>（{{ t('单击笔记设定', 'set by clicking a note') }}）；{{ t('没有焦点时，用当前搜索 / 标签 / 分类命中的', 'with no focus, uses all notes matched by the current search / tag / category as') }}<b>{{ t('所有笔记', 'multiple anchors') }}</b>{{ t('作为多锚点；两者都没有时，自动以', '; if none of those exist, it automatically starts from the') }}<b>{{ t('连接数最高的笔记', 'highest-degree note') }}</b>{{ t('为起点，保证深度档位一定能看到变化。', ', so the depth control always has a visible effect.') }}</li>
+            <li>{{ t('焦点笔记会在图上描边标出，面板底部显示它的标题，点', 'The focus note is outlined on the graph and its title is shown at the bottom of the panel; click') }} <code>×</code> {{ t('可清除。', 'to clear it.') }}</li>
           </ul>
 
-          <h4>📖 图谱怎么读（二分图）</h4>
+          <h4>🖱️ {{ t('操作方式', 'Interactions') }}</h4>
+          <ul>
+            <li><b>{{ t('滚轮 / 触控板', 'Wheel / trackpad') }}</b>：{{ t('缩放（放大后节点标题会逐渐浮现，和 Obsidian 一致）', 'Zoom (node titles fade in as you zoom in, like Obsidian)') }}</li>
+            <li><b>{{ t('按住拖拽', 'Drag') }}</b>：{{ t('平移画布；拖动单个节点可调整布局', 'Pan the canvas; drag a single node to adjust the layout') }}</li>
+            <li><b>{{ t('悬停节点', 'Hover a node') }}</b>：{{ t('高亮该节点与它的邻居，其余淡出', 'Highlights it and its neighbors, fading the rest') }}</li>
+            <li><b>{{ t('单击笔记节点', 'Click a note node') }}</b>：{{ t('设为焦点（深度的锚点）', 'Sets it as the focus (depth anchor)') }}</li>
+            <li><b>{{ t('双击笔记节点', 'Double-click a note node') }}</b>：{{ t('打开对应文章', 'Opens the article') }}</li>
+            <li><b>{{ t('单击标签 / 分类节点', 'Click a tag / category node') }}</b>：{{ t('按它筛选（再点一次取消）', 'Filters by it (click again to cancel)') }}</li>
+            <li><b>{{ t('双击空白处', 'Double-click empty space') }}</b>：{{ t('复位视图', 'Resets the view') }}</li>
+            <li><b>{{ t('画布右上工具条', 'Top-right toolbar') }}</b>：{{ t('重排布局 / 复位视图 / 全屏切换', 'Relayout / Reset view / Fullscreen') }}</li>
+          </ul>
+
+          <h4>📖 {{ t('图谱怎么读（二分图）', 'How to read the graph (bipartite)') }}</h4>
           <p>
-            这是<b>笔记 + 概念</b>的二分图：笔记之间不直接互连，而是通过它们<b>共同所属的标签 / 分类</b>发生关系。
-            之前是「共享标签就连线」，k 篇共标签会炸出 k(k−1)/2 条边（如「DDIA」20 篇 → 190 条），
-            只能靠一堆阈值硬压；现在标签 / 分类本身就是节点，中心点回归概念，团爆炸自然消失。
+            {{ t('这是', 'This is a') }}<b>{{ t('笔记 + 概念', 'note + concept') }}</b>{{ t('的二分图：笔记之间不直接互连，而是通过它们', 'bipartite graph: notes are not linked directly, but related through the') }}<b>{{ t('共同所属的标签 / 分类', 'tags / categories they share') }}</b>{{ t('发生关系。', ' they belong to.') }}
+            {{ t('之前是「共享标签就连线」，k 篇共标签会炸出 k(k−1)/2 条边（如「DDIA」20 篇 → 190 条），只能靠一堆阈值硬压；现在标签 / 分类本身就是节点，中心点回归概念，团爆炸自然消失。', 'Previously "shared tag = edge" blew up into k(k−1)/2 edges for k co-tagged notes (e.g. 20 notes → 190 edges) and needed lots of thresholds to suppress; now tags / categories are nodes themselves, the hub returns to concepts, and clique explosions vanish naturally.') }}
           </p>
           <ul>
-            <li><b>实心小圆</b>：一篇笔记，大小 = 连接数。</li>
-            <li><b>实心大圆（brand 色）</b>：<b>标签</b>节点，大小 = 该标签下的笔记数。</li>
-            <li><b>空心大圆（粗边）</b>：<b>分类</b>节点，大小 = 该分类下的笔记数。</li>
-            <li>只收录被 <b>≥3 篇</b>笔记使用的标签、被 <b>≥2 篇</b>使用的分类 —— 长尾里 179 个标签只用了一次，当节点没有意义。</li>
+            <li><b>{{ t('实心小圆', 'Small filled circle') }}</b>：{{ t('一篇笔记，大小 = 连接数。', 'A note; size = degree.') }}</li>
+            <li><b>{{ t('实心大圆（brand 色）', 'Large filled circle (brand color)') }}</b>：<b>{{ t('标签', 'tag') }}</b>{{ t('节点，大小 = 该标签下的笔记数。', ' node; size = number of notes under it.') }}</li>
+            <li><b>{{ t('空心大圆（粗边）', 'Large hollow circle (thick border)') }}</b>：<b>{{ t('分类', 'category') }}</b>{{ t('节点，大小 = 该分类下的笔记数。', ' node; size = number of notes under it.') }}</li>
+            <li>{{ t('只收录被', 'Only tags used by') }} <b>≥3 {{ t('篇', 'notes') }}</b>{{ t('笔记使用的标签、被', ' and categories used by') }} <b>≥2 {{ t('篇', 'notes') }}</b>{{ t('使用的分类 —— 长尾里 179 个标签只用了一次，当节点没有意义。', ' are kept — in the long tail 179 tags are used only once and are not worth showing as nodes.') }}</li>
           </ul>
 
           <div class="gv-legend">
-            <span class="gv-legend-item"><i class="gv-legend-line"></i>正文链接</span>
+            <span class="gv-legend-item"><i class="gv-legend-line"></i>{{ t('正文链接', 'Wiki link') }}</span>
             <span class="gv-legend-item">
-              <i class="gv-legend-line gv-legend-line--tag"></i>标签归属
+              <i class="gv-legend-line gv-legend-line--tag"></i>{{ t('标签归属', 'Tag link') }}
             </span>
             <span class="gv-legend-item">
-              <i class="gv-legend-line gv-legend-line--category"></i>分类归属
+              <i class="gv-legend-line gv-legend-line--category"></i>{{ t('分类归属', 'Category link') }}
             </span>
           </div>
 
-          <h4>⚙️ 数据从哪来</h4>
+          <h4>⚙️ {{ t('数据从哪来', 'Where the data comes from') }}</h4>
           <p>
-            图谱不是手工维护的，而是在启动 / 构建时由 <code>docs/.vitepress/graph-generator.ts</code>
-            扫描 <code>docs/</code> 下所有 Markdown 自动生成，写入
-            <code>docs/public/vault-data.json</code>，页面加载时读取。
+            {{ t('图谱不是手工维护的，而是在启动 / 构建时由', 'The graph is not hand-maintained; at startup / build time') }} <code>docs/.vitepress/graph-generator.ts</code>
+            {{ t('扫描', 'scans all Markdown under') }} <code>docs/</code> {{ t('下所有 Markdown 自动生成，写入', 'and generates the data, writing it to') }}
+            <code>{{ props.dataFile ?? 'vault-data.json' }}</code>{{ t('，页面加载时读取。', ', which is read when the page loads.') }}
           </p>
           <ul>
-            <li><b>节点</b> = 内容页（自动排除首页、归档、分类 / 标签索引等派生页面）</li>
-            <li><b>边</b> = 正文中的站内链接（含 Obsidian 双链 <code>[[...]]</code>）+ 共享标签 / 同分类关联</li>
-            <li><b>标题 / 标签 / 分类</b> 取自各页 frontmatter 的 <code>title</code> / <code>tags</code> / <code>category(categories)</code></li>
+            <li><b>{{ t('节点', 'Nodes') }}</b> = {{ t('内容页（自动排除首页、归档、分类 / 标签索引等派生页面）', 'content pages (derived pages like home, archives, category / tag indexes are auto-excluded)') }}</li>
+            <li><b>{{ t('边', 'Edges') }}</b> = {{ t('正文中的站内链接（含 Obsidian 双链', 'in-body internal links (including Obsidian') }} <code>[[...]]</code>{{ t('）+ 共享标签 / 同分类关联', ') + shared-tag / same-category associations') }}</li>
+            <li><b>{{ t('标题 / 标签 / 分类', 'Title / tags / category') }}</b> {{ t('取自各页 frontmatter 的', 'come from each page\'s frontmatter') }} <code>title</code> / <code>tags</code> / <code>category(categories)</code></li>
           </ul>
-          <p>新增文章只要带上 <code>tags</code> 或 <code>category</code>，图谱会自动把它接进来，无需改动任何配置。</p>
+          <p>{{ t('新增文章只要带上', 'Any new article that carries a') }} <code>tags</code> {{ t('或', 'or') }} <code>category</code>{{ t('，图谱会自动把它接进来，无需改动任何配置。', ' is automatically wired into the graph — no config change needed.') }}</p>
         </div>
       </div>
     </div>

@@ -7,10 +7,10 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 /**
- * 获取所有分类及其文章列表
+ * 获取所有分类及其文章列表（按 locale 过滤：''=中文，'en'=英文）
  */
-export function getCategories() {
-  const posts = getBlogPostsMetadata()
+export function getCategories(locale = '') {
+  const posts = getBlogPostsMetadata(locale)
   const categories: Record<string, typeof posts> = {}
 
   posts.forEach(post => {
@@ -39,21 +39,27 @@ export function getCategories() {
 }
 
 /**
- * 生成分类索引页面
+ * 生成分类索引页面（中文 /docs/blog/categories/，英文 /docs/en/blog/categories/）
  */
-export function updateCategoriesIndexPage() {
+export function updateCategoriesIndexPage(locale = '') {
   try {
-    const categories = getCategories()
+    const categories = getCategories(locale)
+    const isEn = !!locale
+    const t = (zh: string, en: string) => (isEn ? en : zh)
+    const prefix = locale ? `/${locale}` : ''
+    const outBase = locale ? `../${locale}/blog/categories` : '../blog/categories'
+    const uncat = isEn ? 'Uncategorized' : '未分类'
+
     const categoryNames = Object.keys(categories).sort()
 
     let content = `---
-title: 分类索引
-description: 按分类浏览技术文章
+title: ${t('分类索引', 'Categories')}
+description: ${t('按分类浏览技术文章', 'Browse articles by category')}
 ---
 
-# 分类索引
+# ${t('分类索引', 'Categories')}
 
-按技术领域分类浏览文章，快速定位感兴趣的内容。
+${t('按技术领域分类浏览文章，快速定位感兴趣的内容。', 'Browse articles grouped by technical domain to quickly find what interests you.')}
 
 `
 
@@ -65,12 +71,14 @@ description: 按分类浏览技术文章
       'DevOps': '🚀',
       '工具使用': '🛠️',
       '学习笔记': '📝',
-      '未分类': '📁'
+      '未分类': '📁',
+      '.NET Core': '🔧',
+      'Uncategorized': '📁'
     }
 
     // 热门分类精选：按文章数降序取前 5，排除「未分类」
     const hotRaw = categoryNames
-      .filter(name => name !== '未分类')
+      .filter(name => name !== uncat)
       .map(name => ({ name, count: categories[name].length }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5)
@@ -79,11 +87,11 @@ description: 按分类浏览技术文章
     const hotPosts = hotNames.map(name => {
       const icon = categoryIcons[name] || '📁'
       const posts = categories[name]
-      const link = `/blog/categories/${name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
-      const latest = posts.slice(0, 3).map(p => p.title).join('、')
+      const link = `${prefix}/blog/categories/${name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}`
+      const latest = posts.slice(0, 3).map(p => p.title).join(isEn ? ', ' : '、')
       return {
-        title: `${icon} ${name}（${posts.length} 篇）`,
-        description: latest ? `最新：${latest}` : '',
+        title: `${icon} ${name}（${posts.length} ${isEn ? 'posts' : '篇'}）`,
+        description: latest ? `${isEn ? 'Latest: ' : '最新：'}${latest}` : '',
         link
       }
     })
@@ -104,19 +112,20 @@ const hotCats = ${hotJson}
     content += `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 32px 0;">\n\n`
 
     categoryNames.forEach(category => {
+      const name = category === uncat ? uncat : category
       const icon = categoryIcons[category] || '📁'
       const posts = categories[category]
       const count = posts.length
       // 生成友好的 URL 路径
-      const filename = category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')
-      const link = `/blog/categories/${filename}`
+      const filename = name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')
+      const link = `${prefix}/blog/categories/${filename}`
 
       content += `<div style="border: 1px solid var(--vp-c-divider); border-radius: 8px; padding: 20px; transition: all 0.2s ease;" onmouseover="this.style.borderColor='var(--vp-c-brand)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)'" onmouseout="this.style.borderColor='var(--vp-c-divider)'; this.style.boxShadow='none'">
   <h3 style="margin: 0 0 12px 0; font-size: 1.1em; display: flex; justify-content: space-between; align-items: center;">
     <a href="${link}" style="text-decoration: none; color: inherit;">
-      ${icon} ${category}
+      ${icon} ${name}
     </a>
-    <span style="font-size: 0.85em; color: var(--vp-c-text-3); font-weight: normal;">${count} 篇</span>
+    <span style="font-size: 0.85em; color: var(--vp-c-text-3); font-weight: normal;">${count} ${isEn ? 'posts' : '篇'}</span>
   </h3>
   <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; line-height: 1.8; color: var(--vp-c-text-2);">
 `
@@ -127,7 +136,7 @@ const hotCats = ${hotJson}
       })
 
       if (count > 3) {
-        content += `    <li><a href="${link}" style="color: var(--vp-c-brand); text-decoration: none;">... 查看更多 (${count - 3} 篇)</a></li>\n`
+        content += `    <li><a href="${link}" style="color: var(--vp-c-brand); text-decoration: none;">... ${isEn ? `View more (${count - 3} posts)` : `查看更多 (${count - 3} 篇)`}</a></li>\n`
       }
 
       content += `  </ul>
@@ -140,21 +149,21 @@ const hotCats = ${hotJson}
 
 ---
 
-## 统计信息
+## ${t('统计信息', 'Statistics')}
 
-- **总分类数**: ${categoryNames.length} 个
-- **总文章数**: ${Object.values(categories).reduce((sum, posts) => sum + posts.length, 0)} 篇
+- **${t('总分类数', 'Total categories')}**: ${categoryNames.length} ${isEn ? 'categories' : '个'}
+- **${t('总文章数', 'Total posts')}**: ${Object.values(categories).reduce((sum, posts) => sum + posts.length, 0)} ${isEn ? 'posts' : '篇'}
 
 ---
 
-[← 返回博客首页](../index.md) | [查看所有文章归档](../archives.md)
+[← ${t('返回博客首页', 'Back to blog')}](../index.md)${isEn ? '' : ' | [查看所有文章归档](../archives.md)'}
 
 <!--
-  注意：此文件由 blog-utils.ts 自动生成，请勿手动编辑。
+  注意：此文件由 category-generator.ts 自动生成，请勿手动编辑。
 -->
 `
 
-    const outputPath = path.resolve(__dirname, '../blog/categories/index.md')
+    const outputPath = path.resolve(__dirname, `${outBase}/index.md`)
 
     // 确保目录存在
     const outputDir = path.dirname(outputPath)
@@ -164,18 +173,25 @@ const hotCats = ${hotJson}
 
     fs.writeFileSync(outputPath, content, 'utf-8')
 
-    console.log(`✅ 分类索引页已自动更新 (${categoryNames.length} 个分类)`)
+    console.log(`✅ 分类索引页已自动更新 (${locale || 'zh'}): ${categoryNames.length} 个分类`)
   } catch (error) {
-    console.error('❌ 更新分类索引页失败:', error.message)
+    console.error(`❌ 更新分类索引页失败 (${locale || 'zh'}):`, (error as Error).message)
   }
 }
 
 /**
  * 生成单个分类的详细页面（卡片网格，响应式布局，全部展示无需分页）
  */
-export function updateCategoryPage(category: string) {
+export function updateCategoryPage(category: string, locale = '') {
   try {
-    const categories = getCategories()
+    const isEn = !!locale
+    const t = (zh: string, en: string) => (isEn ? en : zh)
+    const prefix = locale ? `/${locale}` : ''
+    const outBase = locale ? `../${locale}/blog/categories` : '../blog/categories'
+    const uncat = isEn ? 'Uncategorized' : '未分类'
+    const name = category === uncat ? uncat : category
+
+    const categories = getCategories(locale)
     const posts = categories[category]
 
     if (!posts || posts.length === 0) {
@@ -190,7 +206,9 @@ export function updateCategoryPage(category: string) {
       'DevOps': '🚀',
       '工具使用': '🛠️',
       '学习笔记': '📝',
-      '未分类': '📁'
+      '未分类': '📁',
+      '.NET Core': '🔧',
+      'Uncategorized': '📁'
     }
 
     const icon = categoryIcons[category] || '📁'
@@ -207,17 +225,17 @@ export function updateCategoryPage(category: string) {
     const postsJson = JSON.stringify(postsData)
       .replace(/</g, '\\u003c')
       .replace(/\$\{/g, '\\u0024\\u007b')
-    const categoryJson = JSON.stringify(category)
+    const categoryJson = JSON.stringify(name)
 
     const content = `---
-title: ${category}
-description: 浏览${category}相关的所有技术文章
+title: ${name}
+description: ${t(`浏览${name}相关的所有技术文章`, `Browse all articles related to ${name}`)}
 aside: false
 ---
 
-# ${icon} ${category}
+# ${icon} ${name}
 
-本分类共 ${posts.length} 篇文章。
+${t(`本分类共 ${posts.length} 篇文章。`, `This category has ${posts.length} articles.`)}
 
 <script setup>
 const categoryName = ${categoryJson}
@@ -225,7 +243,7 @@ const posts = ${postsJson}
 </script>
 
 <div class="category-posts">
-  <CategoryHeroCarousel variant="image" 
+  <CategoryHeroCarousel variant="image"
     :posts="posts" :count="5" :interval="5000" />
 
   <a v-for="post in posts" :key="post.link" class="card" :href="post.link">
@@ -248,7 +266,7 @@ const posts = ${postsJson}
   </a>
 </div>
 
-<p class="posts-count">共 {{ posts.length }} 篇文章</p>
+<p class="posts-count">${t(`共 {{ posts.length }} 篇文章`, `{{ posts.length }} articles total`)}</p>
 
 <style scoped>
 .category-posts {
@@ -384,15 +402,15 @@ const posts = ${postsJson}
 }
 </style>
 
-[← 返回分类索引](./index.md) | [查看所有文章归档](../archives.md)
+[← ${t('返回分类索引', 'Back to category index')}](./index.md) | [← ${t('返回博客首页', 'Back to blog')}](../index.md)
 
 <!--
-  注意：此文件由 blog-utils.ts 自动生成，请勿手动编辑。
+  注意：此文件由 category-generator.ts 自动生成，请勿手动编辑。
 -->
 `
 
-    const filename = category.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-') + '.md'
-    const outputPath = path.resolve(__dirname, `../blog/categories/${filename}`)
+    const filename = name.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-') + '.md'
+    const outputPath = path.resolve(__dirname, `${outBase}/${filename}`)
 
     // 确保目录存在
     const outputDir = path.dirname(outputPath)
@@ -402,32 +420,28 @@ const posts = ${postsJson}
 
     fs.writeFileSync(outputPath, content, 'utf-8')
 
-    console.log(`✅ 分类页面已生成: ${category} (${posts.length} 篇文章)`)
+    console.log(`✅ 分类页面已生成: ${name} (${locale || 'zh'}) (${posts.length} 篇文章)`)
   } catch (error) {
-    console.error(`❌ 生成分类页面失败 (${category}):`, error.message)
+    console.error(`❌ 生成分类页面失败 (${locale || 'zh'} ${category}):`, (error as Error).message)
   }
 }
 
 /**
- * 生成所有分类页面
+ * 生成所有分类页面（默认中英文都生成；传 locale 则只生成该语言）
  */
-export function updateAllCategoryPages() {
+export function updateAllCategoryPages(locale?: string) {
   try {
-    const categories = getCategories()
-    const categoryNames = Object.keys(categories)
-
+    const locales = locale === undefined ? ['', 'en'] : [locale]
     console.log(`\n📂 开始生成分类页面...`)
-
-    // 生成分类索引页
-    updateCategoriesIndexPage()
-
-    // 为每个分类生成详细页面
-    categoryNames.forEach(category => {
-      updateCategoryPage(category)
-    })
-
-    console.log(`✅ 所有分类页面已生成 (${categoryNames.length} 个分类)\n`)
+    for (const loc of locales) {
+      const categories = getCategories(loc)
+      updateCategoriesIndexPage(loc)
+      Object.keys(categories).forEach(category => {
+        updateCategoryPage(category, loc)
+      })
+      console.log(`✅ 分类页面已生成 (${loc || 'zh'}): ${Object.keys(categories).length} 个分类`)
+    }
   } catch (error) {
-    console.error('❌ 生成分类页面失败:', error.message)
+    console.error('❌ 生成分类页面失败:', (error as Error).message)
   }
 }

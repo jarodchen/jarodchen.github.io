@@ -302,13 +302,26 @@ html {
     overflow: hidden;
   }
 
+  /* .Layout 本身是 flex 列：内容区弹性撑满 + 页脚固定高度，二者共同占满 100vh。
+     页脚常驻底部、内容区独立滚动，滚动条都从顶栏之下开始，不会穿过 header。
+     .VPNav 保持默认 fixed 浮层不变（上一版改成 relative 才导致布局跳动）。 */
+  .Layout {
+    height: 100vh;
+  }
+
   .VPContent {
     margin-top: var(--vp-nav-height) !important;
-    height: calc(100vh - var(--vp-nav-height)) !important;
-    padding-top: 0 !important;
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-top: 0 !important;
     scroll-behavior: smooth;
+  }
+
+  /* 页脚常驻底部、不随内容滚动裁掉 */
+  .VPFooter {
+    flex: 0 0 auto;
   }
 
   /* 局部导航（分类页 / 文章页）吸顶到内容区顶部：内容区已在 header 之下，

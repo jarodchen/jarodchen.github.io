@@ -9,6 +9,13 @@ description: 在线工具和实用程序集合
 <script setup>
 const tools = [
   {
+    icon: '✏️',
+    name: 'Excalidraw',
+    desc: '免费的手绘风格在线白板，支持流程图、草图与协作绘图',
+    link: 'https://jarodchen.github.io/excalidraw/',
+    tags: ['白板', '绘图']
+  },
+  {
     icon: '📊',
     name: 'ECharts Playground',
     desc: '基于 Vue3 + ECharts 的交互式图表演示平台',

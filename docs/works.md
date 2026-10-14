@@ -19,6 +19,26 @@ const sites = [
       { text: '在线预览', href: 'https://jarodchen.github.io/jarod-site/' },
       { text: 'GitHub 仓库', href: 'https://github.com/jarodchen/jarod-site' }
     ]
+  },
+    {
+    icon: '🅰️',
+    name: 'admin-ng',
+    desc: 'jarod-site 的 Angular 实现',
+    tags: ['Angular'],
+    links: [
+      { text: '在线预览', href: 'https://jarodchen.github.io/admin-ng/' },
+      { text: 'GitHub 仓库', href: 'https://github.com/jarodchen/admin-ng' }
+    ]
+  },
+    {
+    icon: '⚛️',
+    name: 'admin-react',
+    desc: 'jarod-site 的 React 实现',
+    tags: ['React'],
+    links: [
+      { text: '在线预览', href: 'https://jarodchen.github.io/admin-react/' },
+      { text: 'GitHub 仓库', href: 'https://github.com/jarodchen/admin-react' }
+    ]
   }
 ]
 

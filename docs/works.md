@@ -1,12 +1,12 @@
 ---
 title: 作品导航
-description: 已部署上线的作品集合：管理后台站点与 RustFS OOS 企业网盘的多框架客户端
+description: 已部署上线的作品集合：管理后台站点、RustFS OOS 企业网盘的多框架客户端，以及公司官网模板的 Next.js / Astro / Nuxt 实现
 sidebar: true
 ---
 
 # 作品导航
 
-这里收录了我已部署上线、可以直接访问的作品。既包含独立站点，也包含同一个产品在不同前端框架下的实现。
+这里收录了我已部署上线、可以直接访问的作品。既包含独立站点，也包含同一个产品在不同前端框架下的实现（企业网盘客户端、公司官网模板）。
 
 <script setup>
 const sites = [
@@ -74,6 +74,39 @@ const clients = [
     ]
   }
 ]
+
+const websites = [
+  {
+    icon: '▲',
+    name: 'official-website-nextjs',
+    desc: '公司官网模板的 Next.js 实现，基于 App Router 与服务端渲染，适合需要动态能力与 SSR/ISR 的官网场景。',
+    tags: ['Next.js', 'React', 'TypeScript'],
+    links: [
+      { text: '在线预览', href: 'https://jarodchen.github.io/official-website-nextjs' },
+      { text: 'GitHub 仓库', href: 'https://github.com/jarodchen/official-website-nextjs' }
+    ]
+  },
+  {
+    icon: '🚀',
+    name: 'official-website-sample',
+    desc: '公司官网模板的 Astro 实现，默认零 JS 输出，主打极致的首屏性能与静态部署。',
+    tags: ['Astro', 'TypeScript', 'SSG'],
+    links: [
+      { text: '在线预览', href: 'https://jarodchen.github.io/official-website-sample' },
+      { text: 'GitHub 仓库', href: 'https://github.com/jarodchen/official-website-sample' }
+    ]
+  },
+  {
+    icon: '💚',
+    name: 'official-website-nuxt',
+    desc: '公司官网模板的 Nuxt 实现，基于 Vue 3 与服务端渲染，SEO 与内容型页面开箱即用。',
+    tags: ['Nuxt', 'Vue 3', 'TypeScript'],
+    links: [
+      { text: '在线预览', href: 'https://jarodchen.github.io/official-website-nuxt' },
+      { text: 'GitHub 仓库', href: 'https://github.com/jarodchen/official-website-nuxt' }
+    ]
+  }
+]
 </script>
 
 ## 🏢 站点
@@ -114,6 +147,31 @@ const clients = [
     <div v-if="c.links && c.links.length" class="card-links">
       <a
         v-for="link in c.links"
+        :key="link.text"
+        :href="link.href"
+        class="card-link"
+        target="_blank"
+        rel="noopener"
+      >{{ link.text }} →</a>
+    </div>
+  </div>
+</div>
+
+## 🌐 公司官网模板 · 多框架实现
+
+同一套**公司官网模板**，分别用 Next.js、Astro、Nuxt 三种框架各实现了一遍。页面结构、内容与 SEO 处理保持一致，可以直接横向对比三种框架在官网这类内容型站点下的开发体验与产物差异。
+
+<div class="cards-grid">
+  <div v-for="w in websites" :key="w.name" class="card">
+    <div class="card-icon">{{ w.icon }}</div>
+    <h3 class="card-title">{{ w.name }}</h3>
+    <p class="card-desc">{{ w.desc }}</p>
+    <div class="card-tags">
+      <span v-for="tag in w.tags" :key="tag" class="tag">{{ tag }}</span>
+    </div>
+    <div v-if="w.links && w.links.length" class="card-links">
+      <a
+        v-for="link in w.links"
         :key="link.text"
         :href="link.href"
         class="card-link"

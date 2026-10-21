@@ -109,7 +109,7 @@ const websites = [
 ]
 </script>
 
-## 🏢 站点
+## 🏢 中后台管理
 
 <div class="cards-grid">
   <div v-for="site in sites" :key="site.name" class="card">

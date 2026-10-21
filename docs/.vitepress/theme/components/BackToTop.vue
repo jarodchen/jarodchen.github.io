@@ -6,20 +6,12 @@ const THRESHOLD = 300
 const showBackTop = ref(false)
 const showBackBottom = ref(false)
 
-// 桌面端滚动容器是 .Layout（从 header 下方开始，整窗被 overflow:hidden 锁死），
-// 移动端仍是整窗滚动。这里自动判断当前用哪个滚动容器（参考 flog 项目）。
-function getScroller(): HTMLElement | Window {
-  const el = document.querySelector<HTMLElement>('.Layout')
-  if (el && el.scrollHeight > el.clientHeight + 4) return el
-  return window
-}
-
+// 滚动容器恢复为整窗（window），与 VitePress 默认行为一致：
+// 右侧「页面导航」大纲、#hash 锚点跳转、路由切换复位都依赖 window 滚动。
 function onScroll() {
-  const s = getScroller()
-  const top = s === window ? window.scrollY : (s as HTMLElement).scrollTop
-  const height = s === window ? window.innerHeight : (s as HTMLElement).clientHeight
-  const scrollHeight =
-    s === window ? document.documentElement.scrollHeight : (s as HTMLElement).scrollHeight
+  const top = window.scrollY
+  const height = window.innerHeight
+  const scrollHeight = document.documentElement.scrollHeight
 
   // 显示回到顶部按钮：滚动距离超过阈值
   showBackTop.value = top > THRESHOLD
@@ -29,26 +21,20 @@ function onScroll() {
 }
 
 function scrollToTop() {
-  getScroller().scrollTo({ top: 0, behavior: 'smooth' })
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 function scrollToBottom() {
-  const s = getScroller()
-  const scrollHeight =
-    s === window ? document.documentElement.scrollHeight : (s as HTMLElement).scrollHeight
-  s.scrollTo({ top: scrollHeight, behavior: 'smooth' })
+  window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })
 }
 
 onMounted(() => {
-  // 同时监听 window 与 .Layout 滚动容器，桌面端 / 移动端都能正确响应
   window.addEventListener('scroll', onScroll, { passive: true })
-  document.querySelector('.Layout')?.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', onScroll)
-  document.querySelector('.Layout')?.removeEventListener('scroll', onScroll)
 })
 </script>
 
